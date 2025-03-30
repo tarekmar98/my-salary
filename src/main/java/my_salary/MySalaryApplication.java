@@ -1,4 +1,4 @@
-package com.mysalary.my_salary;
+package my_salary;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

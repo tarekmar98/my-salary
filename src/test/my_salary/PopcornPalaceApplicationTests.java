@@ -1,4 +1,4 @@
-package com.mysalary.my_salary;
+package mysalary.my_salary;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
