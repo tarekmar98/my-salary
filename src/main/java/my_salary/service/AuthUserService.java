@@ -1,6 +1,6 @@
 package my_salary.service;
 
-import my_salary.Resources.Statics;
+import my_salary.resources.Statics;
 import my_salary.authentication.JwtTokenProvider;
 import my_salary.entity.AuthUser;
 import my_salary.repository.AuthUserRepository;
@@ -34,7 +34,7 @@ public class AuthUserService {
             authUser = new AuthUser(phoneNumber);
         }
 
-        authUser.validate();
+        validate(authUser);
         String verificationCode = String.valueOf((int) (Math.random() * 900000 + 100000));
         authUser.setOTP(verificationCode);
         authUser.setSameOtpTries(0);
@@ -61,7 +61,7 @@ public class AuthUserService {
             throw new IllegalArgumentException("User does not exist!");
         }
 
-        authUser.validate();
+        validate(authUser);
         if (authUser.getOTP().equals(verificationCode) && authUser.getSameOtpTries() < Statics.MAX_SAME_OTP_TRIES) {
             String newVerificationCode = String.valueOf((int) (Math.random() * 900000 + 100000));
             authUser.setOTP(newVerificationCode);
@@ -77,5 +77,11 @@ public class AuthUserService {
 
         authUser.setSameOtpTries(authUser.getSameOtpTries() + 1);
         throw new IllegalArgumentException("Verification code is incorrect!");
+    }
+
+    public void validate(AuthUser authUser) {
+        if (authUser.getPhoneNumber().charAt(0) != '+' || authUser.getPhoneNumber().length() != 13) {
+            throw new IllegalArgumentException("Invalid Phone Number");
+        }
     }
 }
