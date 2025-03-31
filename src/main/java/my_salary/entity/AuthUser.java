@@ -30,12 +30,6 @@ public class AuthUser {
         this.sameOtpTries = 0;
     }
 
-    public void validate() {
-        if (phoneNumber.charAt(0) != '+' || phoneNumber.length() != 13) {
-            throw new IllegalArgumentException("Invalid Phone Number");
-        }
-    }
-
     @Override
     public String toString() {
         return "AuthUser{" + "phoneNumber=" + phoneNumber + ", OTP=" + OTP + ", lastTry=" + lastTry + ", numTries=" + numTries + ", sameOtpTries=" + sameOtpTries + '}';

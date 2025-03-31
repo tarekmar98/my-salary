@@ -1,4 +1,4 @@
-package my_salary.Resources;
+package my_salary.resources;
 
 public class Statics {
     public static int MAX_LOGIN_ATTEMPTS = 5;

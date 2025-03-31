@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     );
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
 
         return PUBLIC_URLS.stream().anyMatch(path::startsWith);
@@ -43,16 +43,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .getBody();
 
                 String phoneNumber = claims.getSubject();
-//                request.setAttribute("phoneNumber", phoneNumber);
-                // Add extracted data to the SecurityContext
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
-                                phoneNumber,  // Principal (phoneNumber or other unique ID)
-                                null,         // Credentials (not used with JWT)
-                                List.of()     // Authorities - populate if roles are in the token
+                                phoneNumber,
+                                null,
+                                List.of()
                         );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                if (!request.getHeader("phoneNumber").equals(phoneNumber)) {
+                    throw new Exception("Invalid token");
+                }
 
 
             } catch (Exception e) {
