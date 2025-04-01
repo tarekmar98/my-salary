@@ -15,12 +15,12 @@ public class AuthUserController {
 
     @PutMapping("/signUp/{phoneNumber}")
     public ResponseEntity<?> signUp(@PathVariable String phoneNumber) {
-        return authUserService.signUp(phoneNumber);
+        return ResponseEntity.ok().body(authUserService.signUp(phoneNumber));
     }
 
     @PutMapping("/verifySignUp/{phoneNumber}/{verificationCode}")
     public ResponseEntity<?> verifySignUp(@PathVariable String phoneNumber, @PathVariable String verificationCode) {
-        return authUserService.verifySignUp(phoneNumber, verificationCode);
+        return ResponseEntity.ok().body(authUserService.verifySignUp(phoneNumber, verificationCode));
     }
 
 }

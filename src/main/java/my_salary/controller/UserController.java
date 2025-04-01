@@ -14,16 +14,16 @@ public class UserController {
 
     @GetMapping("/myProfile")
     public ResponseEntity<?> getMyProfile(@RequestHeader("phoneNumber") String phoneNumber) {
-        return this.userService.getProfileByPhoneNumber(phoneNumber);
+        return ResponseEntity.ok().body(this.userService.getProfileByPhoneNumber(phoneNumber));
     }
 
     @PutMapping("/addProfile")
     public ResponseEntity<?> addProfile(@RequestBody User user, @RequestHeader("phoneNumber") String phoneNumber) {
-        return this.userService.updateUser(phoneNumber, user, true);
+        return ResponseEntity.status(201).body(this.userService.updateUser(phoneNumber, user, true));
     }
 
     @PutMapping("updateProfile")
     public ResponseEntity<?> updateProfile(@RequestBody User user, @RequestHeader("phoneNumber") String phoneNumber) {
-        return this.userService.updateUser(phoneNumber, user, false);
+        return ResponseEntity.ok().body(this.userService.updateUser(phoneNumber, user, false));
     }
 }

@@ -5,7 +5,6 @@ import my_salary.authentication.JwtTokenProvider;
 import my_salary.entity.AuthUser;
 import my_salary.repository.AuthUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -28,7 +27,7 @@ public class AuthUserService {
         jwtTokenProvider = new JwtTokenProvider();
     }
 
-    public ResponseEntity<?> signUp(String phoneNumber) {
+    public String signUp(String phoneNumber) {
         AuthUser authUser = authUserRepository.findById(phoneNumber).orElse(null);
         if (authUser == null) {
             authUser = new AuthUser(phoneNumber);
@@ -52,10 +51,10 @@ public class AuthUserService {
             throw new IllegalArgumentException("Too many login attempts!");
         }
 
-        return ResponseEntity.ok().body("Verification code sent successfully.");
+        return "Verification code sent successfully.";
     }
 
-    public ResponseEntity<?> verifySignUp(String phoneNumber, String verificationCode) {
+    public HashMap<String, String> verifySignUp(String phoneNumber, String verificationCode) {
         AuthUser authUser = authUserRepository.findById(phoneNumber).orElse(null);
         if (authUser == null) {
             throw new IllegalArgumentException("User does not exist!");
@@ -69,9 +68,9 @@ public class AuthUserService {
             authUser.setNumTries(0);
             authUserRepository.save(authUser);
             String token = jwtTokenProvider.generateToken(phoneNumber);
-            return ResponseEntity.ok(new HashMap<>() {{
+            return new HashMap<>() {{
                 put("token", token);
-            }});
+            }};
 
         }
 
