@@ -3,7 +3,6 @@ package my_salary.service;
 import my_salary.entity.User;
 import my_salary.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -17,12 +16,12 @@ public class UserService {
     @Autowired
     private ResourcesService resourcesService;
 
-    public ResponseEntity<?> getProfileByPhoneNumber(String phoneNumber) {
+    public User getProfileByPhoneNumber(String phoneNumber) {
         User user = this.userRepository.findById(phoneNumber).orElseThrow(() -> new IllegalArgumentException("User does not exist!"));
-        return ResponseEntity.ok().body(user);
+        return user;
     }
 
-    public ResponseEntity<?> updateUser(String phoneNumber, User user, boolean newUser) {
+    public String updateUser(String phoneNumber, User user, boolean newUser) {
         if (!Objects.equals(phoneNumber, user.getPhoneNumber())) {
             throw new IllegalArgumentException("Invalid phone number!");
         }
@@ -37,7 +36,7 @@ public class UserService {
 
         validate(user);
         this.userRepository.save(user);
-        return ResponseEntity.ok().body("User updated successfully.");
+        return "User updated successfully.";
     }
 
     public void validate(User user) {
