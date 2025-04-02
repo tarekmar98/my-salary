@@ -51,8 +51,9 @@ public class SmsSenderService {
                 .build();
 
         try {
-            PublishResponse response = snsClient.publish(request);
-            System.out.println("Message sent successfully! Message ID: " + response.messageId());
+            //TODO Uncomment the code to send users the verification code.
+//            PublishResponse response = snsClient.publish(request);
+//            System.out.println("Message sent successfully! Message ID: " + response.messageId());
         } catch (Exception e) {
             System.err.println("Failed to send SMS: " + e.getMessage());
         }

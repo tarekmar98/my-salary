@@ -1,0 +1,8 @@
+{
+  "workTypes": [
+    "workFromOffice",
+    "workFromHome",
+    "vacationDay",
+    "sickDay"
+  ]
+}

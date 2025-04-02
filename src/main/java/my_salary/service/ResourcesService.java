@@ -14,6 +14,8 @@ public class ResourcesService {
     Map<String, List<String>> countries;
     List<String> languages;
     List<String> religions;
+    List<String> workTypes;
+    Map<String, Integer> statics;
 
     public ResourcesService() {
         this.objectMapper = new ObjectMapper();
@@ -37,6 +39,17 @@ public class ResourcesService {
             );
             this.religions = religionsMap.get("religions");
 
+            Map<String, List<String>> workTypesMap = objectMapper.readValue(
+                    new File(resourcesRoot, "workTypes.json"),
+                    Map.class
+            );
+            this.workTypes = workTypesMap.get("workTypes");
+
+            this.statics = objectMapper.readValue(
+                    new File(resourcesRoot, "statics.json"),
+                    Map.class
+            );
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,5 +69,9 @@ public class ResourcesService {
 
     public boolean isValidReligion(String religion) {
         return religions.contains(religion);
+    }
+
+    public boolean isValidWorkType(String workType) {
+        return workTypes.contains(workType);
     }
 }

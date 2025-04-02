@@ -15,7 +15,8 @@ public class AuthUserController {
 
     @PutMapping("/signUp/{phoneNumber}")
     public ResponseEntity<?> signUp(@PathVariable String phoneNumber) {
-        return ResponseEntity.ok().body(authUserService.signUp(phoneNumber));
+        authUserService.signUp(phoneNumber);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/verifySignUp/{phoneNumber}/{verificationCode}")

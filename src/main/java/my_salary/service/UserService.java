@@ -21,7 +21,7 @@ public class UserService {
         return user;
     }
 
-    public String updateUser(String phoneNumber, User user, boolean newUser) {
+    public User updateUser(String phoneNumber, User user, boolean newUser) {
         if (!Objects.equals(phoneNumber, user.getPhoneNumber())) {
             throw new IllegalArgumentException("Invalid phone number!");
         }
@@ -36,7 +36,7 @@ public class UserService {
 
         validate(user);
         this.userRepository.save(user);
-        return "User updated successfully.";
+        return user;
     }
 
     public void validate(User user) {

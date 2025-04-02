@@ -1,0 +1,5 @@
+{
+  "maxLoginAttempts": 5,
+  "MinLoginTimeDiffMin": 5,
+  "maxSameOtpTries": 5
+}
