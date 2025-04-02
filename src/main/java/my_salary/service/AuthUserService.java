@@ -1,6 +1,5 @@
 package my_salary.service;
 
-import my_salary.resources.Statics;
 import my_salary.authentication.JwtTokenProvider;
 import my_salary.entity.AuthUser;
 import my_salary.repository.AuthUserRepository;
@@ -21,13 +20,16 @@ public class AuthUserService {
     @Autowired
     private AuthUserRepository authUserRepository;
 
+    @Autowired
+    private ResourcesService resourcesService;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     public AuthUserService() {
         jwtTokenProvider = new JwtTokenProvider();
     }
 
-    public String signUp(String phoneNumber) {
+    public void signUp(String phoneNumber) {
         AuthUser authUser = authUserRepository.findById(phoneNumber).orElse(null);
         if (authUser == null) {
             authUser = new AuthUser(phoneNumber);
@@ -38,7 +40,7 @@ public class AuthUserService {
         authUser.setOTP(verificationCode);
         authUser.setSameOtpTries(0);
         System.out.println("VerificationCode: " + verificationCode);
-        if (Duration.between(authUser.getLastTry().toInstant(), Instant.now()).toMinutes() < Statics.MIN_LOGIN_TIME_DIFF_MINUTES) {
+        if (Duration.between(authUser.getLastTry().toInstant(), Instant.now()).toMinutes() < resourcesService.statics.get("MinLoginTimeDiffMin")) {
             authUser.setNumTries(authUser.getNumTries() + 1);
         } else {
             authUser.setLastTry(OffsetDateTime.now());
@@ -47,11 +49,9 @@ public class AuthUserService {
 
         authUserRepository.save(authUser);
         smsSenderService.sendMessage(phoneNumber, verificationCode);
-        if (authUser.getNumTries() > Statics.MAX_LOGIN_ATTEMPTS) {
+        if (authUser.getNumTries() > resourcesService.statics.get("maxLoginAttempts")) {
             throw new IllegalArgumentException("Too many login attempts!");
         }
-
-        return "Verification code sent successfully.";
     }
 
     public HashMap<String, String> verifySignUp(String phoneNumber, String verificationCode) {
@@ -61,7 +61,7 @@ public class AuthUserService {
         }
 
         validate(authUser);
-        if (authUser.getOTP().equals(verificationCode) && authUser.getSameOtpTries() < Statics.MAX_SAME_OTP_TRIES) {
+        if (authUser.getOTP().equals(verificationCode) && authUser.getSameOtpTries() < resourcesService.statics.get("maxSameOtpTries")) {
             String newVerificationCode = String.valueOf((int) (Math.random() * 900000 + 100000));
             authUser.setOTP(newVerificationCode);
             authUser.setSameOtpTries(0);

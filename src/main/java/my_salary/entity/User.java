@@ -1,5 +1,6 @@
 package my_salary.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Table(name = "app_user")
 public class User {
     @Id
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     private String country;

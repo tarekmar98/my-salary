@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.Date;
 import java.util.List;
-import java.time.Instant;
 
 
 @Service
@@ -28,13 +26,13 @@ public class JobInfoService {
         return jobInfoRepository.findByPhoneNumber(phoneNumber);
     }
 
-    public String addJob(JobInfo jobInfo, String phoneNumber) {
+    public JobInfo addJob(JobInfo jobInfo, String phoneNumber) {
         validate(jobInfo, phoneNumber);
         jobInfoRepository.save(jobInfo);
-        return "Job added successfully.";
+        return jobInfo;
     }
 
-    public String updateJob(JobInfo jobInfo, String phoneNumber) {
+    public JobInfo updateJob(JobInfo jobInfo, String phoneNumber) {
         if (jobInfo.getId() == null) {
             throw new IllegalArgumentException("Invalid job id!");
         }
@@ -46,13 +44,16 @@ public class JobInfoService {
 
         validate(jobInfo, phoneNumber);
         jobInfoRepository.save(jobInfo);
-        return "Job updated successfully.";
+        return jobInfo;
     }
 
-    public String deleteJob(Long id) {
+    public void deleteJob(Long id) {
         JobInfo jobInfo = jobInfoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Job does not exist!"));
         jobInfoRepository.delete(jobInfo);
-        return "Job deleted successfully.";
+    }
+
+    public JobInfo getJobById(Long id) {
+        return jobInfoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Job does not exist!"));
     }
 
     public void validate(JobInfo jobInfo, String phoneNumber) {
@@ -114,7 +115,8 @@ public class JobInfoService {
             throw new IllegalArgumentException("Invalid weekends info!");
         } else {
             WeekEndInfo weekEndInfo = jobInfo.getWeekEndInfo();
-            if (!weekEndInfo.weekEndStartHour.isBefore(weekEndInfo.weekEndEndHour)) {
+            if (weekEndInfo.weekEndStartHour == null || weekEndInfo.weekEndEndHour == null
+                    || !weekEndInfo.weekEndStartHour.isBefore(weekEndInfo.weekEndEndHour)) {
                 throw new IllegalArgumentException("Invalid weekends start and end hours!");
             }
 

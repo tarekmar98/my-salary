@@ -29,6 +29,7 @@ public class JobInfoController {
 
     @DeleteMapping("/deleteJob/{id}")
     public ResponseEntity<?> deleteJob(@PathVariable Long id) {
-        return ResponseEntity.ok().body(jobInfoService.deleteJob(id));
+        jobInfoService.deleteJob(id);
+        return ResponseEntity.ok().build();
     }
 }

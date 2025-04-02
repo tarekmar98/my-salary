@@ -51,6 +51,9 @@ public class JobInfo {
 
     @Column(name = "curr_start", nullable = true)
     private OffsetDateTime currStart;
+
+    @Column(name = "curr_work_type", nullable = true)
+    private String currWorkType;
     
     public JobInfo() {}
 
