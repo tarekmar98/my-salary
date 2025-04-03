@@ -30,6 +30,7 @@ public class JobInfo {
     private Float travelPerMonth;
     private Float foodPerDay;
     private Float foodPerMonth;
+    private Float dayWorkHours;
     private Integer breakTimeMinutes;
     private Float minHoursBreakTime;
     private Boolean shifts;
@@ -73,6 +74,7 @@ public class JobInfo {
                 ", breakTimeMinutes=" + breakTimeMinutes +
                 ", minHoursBreakTime=" + minHoursBreakTime +
                 ", shifts=" + shifts +
+                ", dayWorkHours=" + dayWorkHours +
                 ", shiftsInfo=" + shiftsInfo +
                 ", overTimeInfo=" + overTimeInfo +
                 ", weekEndInfo=" + weekEndInfo +

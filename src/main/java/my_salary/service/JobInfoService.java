@@ -89,6 +89,10 @@ public class JobInfoService {
             throw new IllegalArgumentException("Invalid break time!");
         }
 
+        if (jobInfo.getDayWorkHours() == null || jobInfo.getDayWorkHours() < 0 || jobInfo.getDayWorkHours() > 24) {
+            throw new IllegalArgumentException("Invalid day work hours!");
+        }
+
         if (jobInfo.getShifts()) {
             ShiftsInfo shiftsInfo = jobInfo.getShiftsInfo();
             if (shiftsInfo.eveningPercentage < 0 || shiftsInfo.nightPercentage < 0) {
@@ -115,8 +119,7 @@ public class JobInfoService {
             throw new IllegalArgumentException("Invalid weekends info!");
         } else {
             WeekEndInfo weekEndInfo = jobInfo.getWeekEndInfo();
-            if (weekEndInfo.weekEndStartHour == null || weekEndInfo.weekEndEndHour == null
-                    || !weekEndInfo.weekEndStartHour.isBefore(weekEndInfo.weekEndEndHour)) {
+            if (weekEndInfo.weekEndStartHour == null || weekEndInfo.weekEndEndHour == null) {
                 throw new IllegalArgumentException("Invalid weekends start and end hours!");
             }
 
