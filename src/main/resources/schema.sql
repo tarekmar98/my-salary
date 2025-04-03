@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS job_info (
     travel_per_month FLOAT DEFAULT 0,
     food_per_day FLOAT DEFAULT 0,
     food_per_month FLOAT DEFAULT 0,
+    day_work_hours FLOAT DEFAULT 0,
     break_time_minutes FLOAT,
     min_hours_break_time FLOAT,
     shifts BOOLEAN default False,
