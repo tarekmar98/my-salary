@@ -35,8 +35,9 @@ public class SalaryService {
         int sickDays = countWorkType(workDays, "sickDay");
         int vacationDays = countWorkType(workDays, "vacationDay");
         if (jobInfo.getSalaryPerDay() != 0) {
-            salary.salary += (workDays.size() - sickDays - vacationDays) * jobInfo.getSalaryPerDay();
-            salary.salary += (sickDays + vacationDays) * jobInfo.getSalaryPerDay();
+            salary.salary += workDays.size() * jobInfo.getSalaryPerDay();
+            salary.sickHours = sickDays * jobInfo.getDayWorkHours();
+            salary.vacationHours = vacationDays * jobInfo.getDayWorkHours();
         } else {
             salary.sickHours = sickDays * jobInfo.getDayWorkHours();
             salary.vacationHours = vacationDays * jobInfo.getDayWorkHours();
@@ -90,11 +91,11 @@ public class SalaryService {
                                 .setScale(2, RoundingMode.HALF_UP)
                                 .floatValue();
 
-                        if (l == shiftsRange.size() - 1 && shiftsRange.size() > 1) {
-                            salary.salary += (percentage * jobInfo.getWeekEndInfo().weekEndPercentage) * hours * jobInfo.getSalaryPerHour();
+                        if (l == 2) {
+                            salary.salary += percentage * jobInfo.getWeekEndInfo().weekEndPercentage * hours * jobInfo.getSalaryPerHour();
                             salary.weekEndHours += hours;
                         } else {
-                            salary.salary += (percentage * hours) * jobInfo.getSalaryPerHour();
+                            salary.salary += percentage * hours * jobInfo.getSalaryPerHour();
                         }
 
                         updateHours(salary, hours, j, i);
@@ -363,10 +364,14 @@ public class SalaryService {
 
         if (mainRange.getFirst().isBefore(subtractRange.getFirst())) {
             resultingRanges.add(Pair.of(mainRange.getFirst(), subtractRange.getFirst()));
+        } else {
+            resultingRanges.add(null);
         }
 
         if (mainRange.getSecond().isAfter(subtractRange.getSecond())) {
             resultingRanges.add(Pair.of(subtractRange.getSecond(), mainRange.getSecond()));
+        } else {
+            resultingRanges.add(null);
         }
 
         return resultingRanges;
