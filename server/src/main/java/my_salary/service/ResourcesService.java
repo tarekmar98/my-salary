@@ -21,7 +21,7 @@ public class ResourcesService {
         this.objectMapper = new ObjectMapper();
         try {
             String resourcesRoot = Paths.get("").toAbsolutePath() +
-                    "\\server\\src\\main\\java\\my_salary\\resources\\";
+                    "\\src\\main\\java\\my_salary\\resources\\";
             this.countries = objectMapper.readValue(
                     new File(resourcesRoot, "countries.json"),
                     Map.class
