@@ -1,40 +1,40 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart';
+import 'Page/HomePage.dart';
 import 'Page/SignUpPage.dart';
 import 'Page/VerifyPage.dart';
 import 'Service/ServiceLocator.dart';
 
-// void main() {
-//   void main() {
-//     runApp(MaterialApp(
-//       initialRoute: '/',
-//       routes: {
-//         '/signUp': (context) => const SignUpPage(),
-//         '/verify': (context) => const VerifyPage(),
-//       },
-//     ));
-//   }
-// }
-
-
 void main() {
   configureDependencies();
-  runApp(const MyApp());
+  runApp(const MySalaryApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MySalaryApp extends StatelessWidget {
+  const MySalaryApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'mySalary',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primarySwatch: Colors.blue,
+        brightness: Brightness.light,
+        fontFamily: 'Poppins',
       ),
-      home: const SignUpPage(),
+      initialRoute: '/home',
+      routes: {
+        '/signUp': (_) => const SignUpPage(),
+        '/verify': (_) => const VerifyPage(),
+        // '/profile': (_) => const ProfilePage(),
+        '/home': (_) => const HomePage(),
+        // '/jobInfo': (_) => const JobInfoPage(),
+        // '/jobDashboard': (_) => const JobDashboardPage(),
+        // '/calendar': (_) => const CalendarPage(),
+        // '/addManual': (_) => const AddManualWorkDayPage(),
+        // '/salaryInfo': (_) => const SalaryInfoPage(),
+      },
+      debugShowCheckedModeBanner: false,
     );
   }
 }
