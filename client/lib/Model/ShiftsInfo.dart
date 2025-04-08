@@ -1,11 +1,11 @@
 import 'package:intl/intl.dart';
 
 class ShiftsInfo {
-  final double? eveningPercentage;
-  final double? nightPercentage;
-  final DateTime? morningStartHour;
-  final DateTime? eveningStartHour;
-  final DateTime? nightStartHour;
+  double? eveningPercentage;
+  double? nightPercentage;
+  DateTime? morningStartHour;
+  DateTime? eveningStartHour;
+  DateTime? nightStartHour;
 
   ShiftsInfo({
     this.eveningPercentage,

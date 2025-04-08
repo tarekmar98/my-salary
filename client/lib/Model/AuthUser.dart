@@ -1,6 +1,6 @@
 class AuthUser {
-  final String? phoneNumber;
-  final String? token;
+  String? phoneNumber;
+  String? token;
 
   AuthUser({
     required this.phoneNumber,

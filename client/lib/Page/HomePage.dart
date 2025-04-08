@@ -52,33 +52,66 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('My Jobs')),
-      body: FutureBuilder<List<JobInfo>>(
-        future: fetchJobs(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No jobs found.'));
-          }
+      body: Stack(
+        children: [
+          FutureBuilder<List<JobInfo>>(
+            future: fetchJobs(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('No jobs found.'));
+              }
 
-          final jobs = snapshot.data!;
-          return ListView(
-            children: jobs.map((job) {
-              return ListTile(
-                title: Text(job.employerName),
-                onTap: () =>
-                    Navigator.pushNamed(context, '/jobDashboard'),
+              final jobs = snapshot.data!;
+              return ListView(
+                children: jobs.map((job) {
+                  return ListTile(
+                    title: Text(job.employerName),
+                    onTap: () =>
+                        Navigator.pushNamed(context, '/jobDashboard'),
+                  );
+                }).toList(),
               );
-            }).toList(),
-          );
-        },
+            },
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () => Navigator.pushNamed(context, '/jobInfo'),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 4.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.home),
+              onPressed: () => Navigator.pushReplacementNamed(
+                context,
+                '/home'
+              )
+            ),
+            const SizedBox(width: 40.0),
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/addJob'
+              )
+            ),
+            const SizedBox(width: 40.0),
+            IconButton(
+              icon: const Icon(Icons.person),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                '/profile'
+              )
+            ),
+          ],
+        ),
       ),
     );
   }
+
 }

@@ -3,25 +3,25 @@ import 'ShiftsInfo.dart';
 import 'WeekEndInfo.dart';
 
 class JobInfo {
-  final int? id;
-  final String userPhoneNumber;
-  final String employerName;
-  final DateTime startDate;
-  final double? salaryPerHour;
-  final double? salaryPerDay;
-  final double? travelPerDay;
-  final double? travelPerMonth;
-  final double? foodPerDay;
-  final double? foodPerMonth;
-  final double? dayWorkHours;
-  final int? breakTimeMinutes;
-  final double? minHoursBreakTime;
-  final bool? shifts;
-  final ShiftsInfo? shiftsInfo;
-  final OverTimeInfo? overTimeInfo;
-  final WeekEndInfo? weekEndInfo;
-  final DateTime? currStart;
-  final String? currWorkType;
+  int? id;
+  String userPhoneNumber;
+  String employerName;
+  DateTime startDate;
+  double? salaryPerHour;
+  double? salaryPerDay;
+  double? travelPerDay;
+  double? travelPerMonth;
+  double? foodPerDay;
+  double? foodPerMonth;
+  double? dayWorkHours;
+  int? breakTimeMinutes;
+  double? minHoursBreakTime;
+  bool? shifts;
+  ShiftsInfo? shiftsInfo;
+  OverTimeInfo? overTimeInfo;
+  WeekEndInfo? weekEndInfo;
+  DateTime? currStart;
+  String? currWorkType;
 
   JobInfo({
     this.id,

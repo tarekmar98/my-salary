@@ -1,21 +1,21 @@
-class AuthUser {
-  final String? phoneNumber;
-  final String? country;
-  final String? city;
-  final String? religion;
-  final String? language;
+class User {
+  String? phoneNumber;
+  String? country;
+  String? city;
+  String? religion;
+  String? language;
 
 
-  AuthUser({
-    required this.phoneNumber,
+  User({
+    this.phoneNumber,
     this.country,
     this.city,
     this.religion,
     this.language,
   });
 
-  factory AuthUser.fromJson(Map<String, dynamic> json) {
-    return AuthUser(
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
       phoneNumber: json['phoneNumber'],
       country: json['country'],
       city: json['city'],
