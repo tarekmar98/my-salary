@@ -15,7 +15,6 @@ class VerifyPage extends StatefulWidget {
 }
 
 class _VerifyPageState extends State<VerifyPage> {
-  final _formKey = GlobalKey<FormState>();
   final _authUserService = getIt<AuthUserService>();
   final _storageService = getIt<StorageService>();
   String _OTP = '';
@@ -24,24 +23,23 @@ class _VerifyPageState extends State<VerifyPage> {
   Future<void> _submit() async {
     _buttonIsEnabled = false;
     String? _fullPhoneNumber = await _storageService.get('phoneNumber');
-    if (_formKey.currentState!.validate()) {
-      debugPrint('Phone Number: $_fullPhoneNumber');
-      try {
-        final response = await _authUserService.verifySignUp(_fullPhoneNumber, _OTP);
-        if (response.statusCode == 200) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Verifying $_OTP')),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(response.body)),
-          );
-        }
-      } catch(e) {
+    debugPrint('Phone Number: $_fullPhoneNumber');
+    try {
+      final response = await _authUserService.verifySignUp(_fullPhoneNumber, _OTP);
+      if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
+          SnackBar(content: Text('Verifying $_OTP')),
+        );
+        Navigator.pushNamed(context, '/home');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response.body)),
         );
       }
+    } catch(e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
     }
     _buttonIsEnabled = true;
   }
@@ -53,7 +51,6 @@ class _VerifyPageState extends State<VerifyPage> {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Form(
-          key: _formKey,
           child: Column(
             children: [
               TextFormField(
