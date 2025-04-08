@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'Page/ProfilePage.dart';
 import 'Page/HomePage.dart';
 import 'Page/SignUpPage.dart';
 import 'Page/VerifyPage.dart';
@@ -26,14 +27,23 @@ class MySalaryApp extends StatelessWidget {
       routes: {
         '/signUp': (_) => const SignUpPage(),
         '/verify': (_) => const VerifyPage(),
-        // '/profile': (_) => const ProfilePage(),
+        '/profile': (_) => const ProfilePage(),
         '/home': (_) => const HomePage(),
-        // '/jobInfo': (_) => const JobInfoPage(),
         // '/jobDashboard': (_) => const JobDashboardPage(),
         // '/calendar': (_) => const CalendarPage(),
         // '/addManual': (_) => const AddManualWorkDayPage(),
         // '/salaryInfo': (_) => const SalaryInfoPage(),
       },
+      // onGenerateRoute: (settings) {
+      //   if (settings.name == '/jobInfo') {
+      //     final args = settings.arguments as Map<String, dynamic>;
+      //     return MaterialPageRoute(
+      //       builder: (context) => JobInfoPage(jobId: args['jobId']),
+      //     );
+      //   }
+      //   // fallback
+      //   return MaterialPageRoute(builder: (_) => const HomePage());
+      // },
       debugShowCheckedModeBanner: false,
     );
   }

@@ -25,12 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
       final response = await _authUserService.signUp(_fullPhoneNumber);
       if (response.statusCode == 200) {
         _storageService.save('phoneNumber', _fullPhoneNumber);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VerifyPage(),
-          ),
-        );
+        Navigator.pushNamed(context, '/verify');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Signing up with $_fullPhoneNumber')),
         );

@@ -1,9 +1,9 @@
 class WeekEndInfo {
-  final double? weekEndStartHour;
-  final double? weekEndEndHour;
-  final double? weekEndPercentage;
-  final String? weekEndStartDay;
-  final String? weekEndEndDay;
+  double? weekEndStartHour;
+  double? weekEndEndHour;
+  double? weekEndPercentage;
+  String? weekEndStartDay;
+  String? weekEndEndDay;
 
   WeekEndInfo({
     this.weekEndStartHour,

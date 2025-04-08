@@ -1,7 +1,7 @@
 class OverTimeInfo {
-  final double? overTimeStartHour125;
-  final double? overTimeStartHour150;
-  final double? overTimeStartHour200;
+  double? overTimeStartHour125;
+  double? overTimeStartHour150;
+  double? overTimeStartHour200;
 
   OverTimeInfo({
     this.overTimeStartHour125,
