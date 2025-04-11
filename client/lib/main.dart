@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'Page/JobInfoPage.dart';
 import 'Page/ProfilePage.dart';
 import 'Page/HomePage.dart';
 import 'Page/SignUpPage.dart';
@@ -29,21 +30,22 @@ class MySalaryApp extends StatelessWidget {
         '/verify': (_) => const VerifyPage(),
         '/profile': (_) => const ProfilePage(),
         '/home': (_) => const HomePage(),
-        // '/jobDashboard': (_) => const JobDashboardPage(),
+        '/addJob': (_) => JobInfoPage(),
+        '/jobDashboard': (_) => const JobDashboardPage(),
         // '/calendar': (_) => const CalendarPage(),
         // '/addManual': (_) => const AddManualWorkDayPage(),
         // '/salaryInfo': (_) => const SalaryInfoPage(),
       },
-      // onGenerateRoute: (settings) {
-      //   if (settings.name == '/jobInfo') {
-      //     final args = settings.arguments as Map<String, dynamic>;
-      //     return MaterialPageRoute(
-      //       builder: (context) => JobInfoPage(jobId: args['jobId']),
-      //     );
-      //   }
-      //   // fallback
-      //   return MaterialPageRoute(builder: (_) => const HomePage());
-      // },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/jobInfo') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => JobInfoPage(jobId: args['jobId'] as int),
+          );
+        }
+        // fallback
+        return MaterialPageRoute(builder: (_) => const HomePage());
+      },
       debugShowCheckedModeBanner: false,
     );
   }

@@ -26,11 +26,8 @@ class HomePageState extends State<HomePage> {
 
   void checkPermission() async {
     String? token = await _storageService.get('token');
-    String x = "12";
     if (token.isEmpty) {
       Navigator.pushReplacementNamed(context, '/signUp');
-    } else {
-      x = '11';
     }
   }
 
@@ -51,7 +48,10 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My Jobs')),
+      appBar: AppBar(
+        title: const Text('My Jobs'),
+        automaticallyImplyLeading: false, // Prevent Flutter from automatically adding a back button
+      ),
       body: Stack(
         children: [
           FutureBuilder<List<JobInfo>>(
@@ -69,9 +69,9 @@ class HomePageState extends State<HomePage> {
               return ListView(
                 children: jobs.map((job) {
                   return ListTile(
-                    title: Text(job.employerName),
+                    title: Text(job.employerName!),
                     onTap: () =>
-                        Navigator.pushNamed(context, '/jobDashboard'),
+                        Navigator.pushNamed(context, '/jobDashboard', arguments: {'jobId': job.id}),
                   );
                 }).toList(),
               );

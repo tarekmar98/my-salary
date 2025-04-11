@@ -27,12 +27,13 @@ class ShiftsInfo {
   }
 
   Map<String, dynamic> toJson() {
+    DateFormat format = DateFormat("HH:mm:ss");
     return {
       'eveningPercentage': eveningPercentage,
       'nightPercentage': nightPercentage,
-      'morningStartHour': morningStartHour?.toIso8601String(),
-      'eveningStartHour': eveningStartHour?.toIso8601String(),
-      'nightStartHour': nightStartHour?.toIso8601String(),
+      'morningStartHour': morningStartHour != null ? format.format(morningStartHour!) : "00:00:00",
+      'eveningStartHour': eveningStartHour != null ? format.format(eveningStartHour!) : "00:00:00",
+      'nightStartHour': nightPercentage != null ? format.format(nightStartHour!) : "00:00:00",
     };
   }
 }
