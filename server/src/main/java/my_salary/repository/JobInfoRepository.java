@@ -1,6 +1,5 @@
 package my_salary.repository;
 
-import my_salary.entity.AuthUser;
 import my_salary.entity.JobInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
