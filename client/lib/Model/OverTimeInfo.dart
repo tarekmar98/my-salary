@@ -1,7 +1,9 @@
+import 'package:intl/intl.dart';
+
 class OverTimeInfo {
-  double? overTimeStartHour125;
-  double? overTimeStartHour150;
-  double? overTimeStartHour200;
+  DateTime? overTimeStartHour125;
+  DateTime? overTimeStartHour150;
+  DateTime? overTimeStartHour200;
 
   OverTimeInfo({
     this.overTimeStartHour125,
@@ -10,18 +12,20 @@ class OverTimeInfo {
   });
 
   factory OverTimeInfo.fromJson(Map<String, dynamic> json) {
+    DateFormat format = DateFormat("HH:mm:ss");
     return OverTimeInfo(
-      overTimeStartHour125: (json['overTimeStartHour125'] as num?)?.toDouble(),
-      overTimeStartHour150: (json['overTimeStartHour150'] as num?)?.toDouble(),
-      overTimeStartHour200: (json['overTimeStartHour200'] as num?)?.toDouble(),
+      overTimeStartHour125: format.parse(json['overTimeStartHour125']),
+      overTimeStartHour150: format.parse(json['overTimeStartHour150']),
+      overTimeStartHour200: format.parse(json['overTimeStartHour200']),
     );
   }
 
   Map<String, dynamic> toJson() {
+    DateFormat format = DateFormat("HH:mm:ss");
     return {
-      'overTimeStartHour125': overTimeStartHour125,
-      'overTimeStartHour150': overTimeStartHour150,
-      'overTimeStartHour200': overTimeStartHour200,
+      'overTimeStartHour125': format.format(overTimeStartHour125!),
+      'overTimeStartHour150': format.format(overTimeStartHour150!),
+      'overTimeStartHour200': format.format(overTimeStartHour200!),
     };
   }
 }

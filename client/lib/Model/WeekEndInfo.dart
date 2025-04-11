@@ -1,6 +1,8 @@
+import 'package:intl/intl.dart';
+
 class WeekEndInfo {
-  double? weekEndStartHour;
-  double? weekEndEndHour;
+  DateTime? weekEndStartHour;
+  DateTime? weekEndEndHour;
   double? weekEndPercentage;
   String? weekEndStartDay;
   String? weekEndEndDay;
@@ -14,9 +16,10 @@ class WeekEndInfo {
   });
 
   factory WeekEndInfo.fromJson(Map<String, dynamic> json) {
+    DateFormat format = DateFormat("HH:mm:ss");
     return WeekEndInfo(
-      weekEndStartHour: (json['weekEndStartHour'] as num?)?.toDouble(),
-      weekEndEndHour: (json['weekEndEndHour'] as num?)?.toDouble(),
+      weekEndStartHour: format.parse(json['weekEndStartHour']),
+      weekEndEndHour: format.parse(json['weekEndEndHour']),
       weekEndPercentage: (json['weekEndPercentage'] as num?)?.toDouble(),
       weekEndStartDay: json['weekEndStartDay'],
       weekEndEndDay: json['weekEndEndDay'],
@@ -24,9 +27,10 @@ class WeekEndInfo {
   }
 
   Map<String, dynamic> toJson() {
+    DateFormat format = DateFormat("HH:mm:ss");
     return {
-      'weekEndStartHour': weekEndStartHour,
-      'weekEndEndHour': weekEndEndHour,
+      'weekEndStartHour': format.format(weekEndStartHour!),
+      'weekEndEndHour': format.format(weekEndEndHour!),
       'weekEndPercentage': weekEndPercentage,
       'weekEndStartDay': weekEndStartDay,
       'weekEndEndDay': weekEndEndDay,

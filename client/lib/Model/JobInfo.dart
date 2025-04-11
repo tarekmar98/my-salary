@@ -4,9 +4,9 @@ import 'WeekEndInfo.dart';
 
 class JobInfo {
   int? id;
-  String userPhoneNumber;
-  String employerName;
-  DateTime startDate;
+  String? userPhoneNumber;
+  String? employerName;
+  DateTime? startDate;
   double? salaryPerHour;
   double? salaryPerDay;
   double? travelPerDay;
@@ -25,9 +25,9 @@ class JobInfo {
 
   JobInfo({
     this.id,
-    required this.userPhoneNumber,
-    required this.employerName,
-    required this.startDate,
+    this.userPhoneNumber,
+    this.employerName,
+    this.startDate,
     this.salaryPerHour,
     this.salaryPerDay,
     this.travelPerDay,
@@ -41,8 +41,6 @@ class JobInfo {
     this.shiftsInfo,
     this.overTimeInfo,
     this.weekEndInfo,
-    this.currStart,
-    this.currWorkType,
   });
 
   factory JobInfo.fromJson(Map<String, dynamic> json) {
@@ -64,8 +62,6 @@ class JobInfo {
       shiftsInfo: json['shiftsInfo'] != null ? ShiftsInfo.fromJson(json['shiftsInfo']) : null,
       overTimeInfo: json['overTimeInfo'] != null ? OverTimeInfo.fromJson(json['overTimeInfo']) : null,
       weekEndInfo: json['weekEndInfo'] != null ? WeekEndInfo.fromJson(json['weekEndInfo']) : null,
-      currStart: json['currStart'] != null ? DateTime.parse(json['currStart']) : null,
-      currWorkType: json['currWorkType'],
     );
   }
 
@@ -74,7 +70,7 @@ class JobInfo {
       'id': id,
       'userPhoneNumber': userPhoneNumber,
       'employerName': employerName,
-      'startDate': startDate.toIso8601String(),
+      'startDate': startDate?.toIso8601String(),
       'salaryPerHour': salaryPerHour,
       'salaryPerDay': salaryPerDay,
       'travelPerDay': travelPerDay,
@@ -88,8 +84,6 @@ class JobInfo {
       'shiftsInfo': shiftsInfo?.toJson(),
       'overTimeInfo': overTimeInfo?.toJson(),
       'weekEndInfo': weekEndInfo?.toJson(),
-      'currStart': currStart?.toIso8601String(),
-      'currWorkType': currWorkType,
     };
   }
 }
