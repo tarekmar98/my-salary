@@ -3,13 +3,14 @@ package my_salary.classes;
 import lombok.Data;
 
 import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 
 @Data
 public class WeekEndInfo {
-    public Float weekEndStartHour;
+    public LocalTime weekEndStartHour;
     public DayOfWeek weekEndStartDay;
-    public Float weekEndEndHour;
+    public LocalTime weekEndEndHour;
     public DayOfWeek weekEndEndDay;
     public Float weekEndPercentage;
 

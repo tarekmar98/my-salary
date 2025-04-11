@@ -109,8 +109,9 @@ public class JobInfoService {
             throw new IllegalArgumentException("Invalid overtime info!");
         } else {
             OverTimeInfo overTimeInfo = jobInfo.getOverTimeInfo();
-            if (!(overTimeInfo.overTimeStartHour125 <= overTimeInfo.overTimeStartHour150
-                    && overTimeInfo.overTimeStartHour150 <= overTimeInfo.overTimeStartHour200)) {
+
+            if (!(overTimeInfo.overTimeStartHour125.isBefore(overTimeInfo.overTimeStartHour150)
+                    && overTimeInfo.overTimeStartHour150.isBefore(overTimeInfo.overTimeStartHour200))) {
                 throw new IllegalArgumentException("Invalid overtime start hours!");
             }
         }

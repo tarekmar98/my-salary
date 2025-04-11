@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.YearMonth;
 
-
+@CrossOrigin(origins = "*")
 @RestController
 public class WorkDayController {
     @Autowired

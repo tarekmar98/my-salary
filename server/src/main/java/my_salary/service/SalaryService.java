@@ -1,6 +1,7 @@
 package my_salary.service;
 
 import my_salary.classes.Salary;
+import my_salary.classes.ShiftsPercentage;
 import my_salary.classes.WeekEndInfo;
 import my_salary.entity.JobInfo;
 import my_salary.entity.WorkDay;
@@ -121,34 +122,36 @@ public class SalaryService {
             }
 
             List<Pair<OffsetDateTime, OffsetDateTime>> overTimeRange = new ArrayList<>();
-            if (hours <= jobInfo.getOverTimeInfo().overTimeStartHour125) {
+            if (hours <= jobInfo.getOverTimeInfo().timeConverter(ShiftsPercentage.percentage125)) {
                 overTimeRange.add(rangeDay);
             } else {
                 OffsetDateTime start = rangeDay.getFirst();
-                long additionalHours = jobInfo.getOverTimeInfo().overTimeStartHour125.longValue();
-                long additionalMinutes = Math.round((jobInfo.getOverTimeInfo().overTimeStartHour125 - additionalHours) * 60);
+                long additionalHours = jobInfo.getOverTimeInfo().timeConverter(ShiftsPercentage.percentage125).longValue();
+                long additionalMinutes = Math.round((jobInfo.getOverTimeInfo().timeConverter(ShiftsPercentage.percentage125) - additionalHours) * 60);
                 OffsetDateTime end = start.plusHours(additionalHours).plusMinutes(additionalMinutes);
                 overTimeRange.add(Pair.of(start, end));
 
-                if (hours <= jobInfo.getOverTimeInfo().overTimeStartHour150) {
+                if (hours <= jobInfo.getOverTimeInfo().timeConverter(ShiftsPercentage.percentage150)) {
                     overTimeRange.add(Pair.of(end, rangeDay.getSecond()));
                 } else {
-                    additionalHours = jobInfo.getOverTimeInfo().overTimeStartHour150.longValue()
-                            - jobInfo.getOverTimeInfo().overTimeStartHour125.longValue();
-                    additionalMinutes = Math.round((jobInfo.getOverTimeInfo().overTimeStartHour150
-                            - jobInfo.getOverTimeInfo().overTimeStartHour125.longValue()
+
+                    additionalHours = jobInfo.getOverTimeInfo().timeConverter(ShiftsPercentage.percentage150).longValue()
+                            - jobInfo.getOverTimeInfo().timeConverter(ShiftsPercentage.percentage125).longValue();
+                    additionalMinutes = Math.round((jobInfo.getOverTimeInfo().timeConverter(ShiftsPercentage.percentage150)
+                            - jobInfo.getOverTimeInfo().timeConverter(ShiftsPercentage.percentage150).longValue()
                             - additionalHours) * 60);
                     OffsetDateTime nextEnd = end.plusHours(additionalHours).plusMinutes(additionalMinutes);
                     overTimeRange.add(Pair.of(end, nextEnd));
                     end = nextEnd;
 
-                    if (hours <= jobInfo.getOverTimeInfo().overTimeStartHour200) {
+                    if (hours <= jobInfo.getOverTimeInfo().timeConverter(ShiftsPercentage.percentage200)) {
                         overTimeRange.add(Pair.of(end, rangeDay.getSecond()));
                     } else {
-                        additionalHours = jobInfo.getOverTimeInfo().overTimeStartHour200.longValue()
-                                - jobInfo.getOverTimeInfo().overTimeStartHour150.longValue();
-                        additionalMinutes = Math.round((jobInfo.getOverTimeInfo().overTimeStartHour200
-                                - jobInfo.getOverTimeInfo().overTimeStartHour150.longValue()
+
+                        additionalHours = jobInfo.getOverTimeInfo().timeConverter(ShiftsPercentage.percentage200).longValue()
+                                - jobInfo.getOverTimeInfo().timeConverter(ShiftsPercentage.percentage150).longValue();
+                        additionalMinutes = Math.round((jobInfo.getOverTimeInfo().timeConverter(ShiftsPercentage.percentage200)
+                                - jobInfo.getOverTimeInfo().timeConverter(ShiftsPercentage.percentage150).longValue()
                                 - additionalHours) * 60);
                         nextEnd = end.plusHours(additionalHours).plusMinutes(additionalMinutes);
                         overTimeRange.add(Pair.of(end, nextEnd));
@@ -339,14 +342,11 @@ public class SalaryService {
         return Pair.of(intersectionStart, intersectionEnd);
     }
 
-    public OffsetDateTime getWeekdayHour(OffsetDateTime reference, DayOfWeek targetDay, Float fractionalHour) {
-        int hour = fractionalHour.intValue();
-        int minute = Math.round((fractionalHour - hour) * 60);
-
+    public OffsetDateTime getWeekdayHour(OffsetDateTime reference, DayOfWeek targetDay, LocalTime fractionalHour) {
         int dayDiff = targetDay.getValue() - reference.getDayOfWeek().getValue();
 
         OffsetDateTime targetDateTime = reference.plusDays(dayDiff)
-                .withHour(hour).withMinute(minute).withSecond(0).withNano(0);
+                .withHour(fractionalHour.getHour()).withMinute(fractionalHour.getMinute());
 
         return targetDateTime;
     }

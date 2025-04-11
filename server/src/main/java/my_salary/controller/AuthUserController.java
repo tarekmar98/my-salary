@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 
-
+@CrossOrigin(origins = "*")
 @RestController
 public class AuthUserController {
     @Autowired
