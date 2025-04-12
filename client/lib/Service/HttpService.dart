@@ -43,6 +43,18 @@ class HttpService {
     return json.decode(response.body);
   }
 
+  Future<dynamic> delete(String endpoint) async {
+    final uri = Uri.parse('$baseUrl$endpoint');
+    Future<Map<String, String>> headers = _buildHeaders();
+    final response = await http.delete(
+      uri,
+      headers: await headers,
+    );
+
+    _handleError(response);
+    return json.decode(response.body);
+  }
+
   Future<Map<String, String>> _buildHeaders() async {
     _phoneNumber ??= await _storageService.get('phoneNumber');
     _token ??= await _storageService.get('token');

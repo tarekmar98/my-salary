@@ -21,7 +21,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
                     corsConfiguration.setAllowCredentials(true);
-                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:59721"));
+                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:59720"));
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "phoneNumber"));
                     return corsConfiguration;
