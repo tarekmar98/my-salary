@@ -132,7 +132,7 @@ class HomePageState extends State<HomePage> {
                     'Add Job',
                     style: TextStyle(fontSize: 18),
                   ),
-                  onPressed: () => Navigator.pushNamed(context, '/add'),
+                  onPressed: () => Navigator.pushNamed(context, '/addJob'),
                 ),
               ),
             ],

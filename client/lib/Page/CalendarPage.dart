@@ -190,7 +190,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     icon: const Icon(Icons.add),
                     label: const Text("Add Work Day"),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/addManual', arguments: {'jobId': widget.jobId});
+                      Navigator.pushNamed(context, '/addManually', arguments: {'jobId': widget.jobId});
                     },
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
