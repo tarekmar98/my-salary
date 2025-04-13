@@ -1,3 +1,4 @@
+import 'package:client/Page/JobDashboardPage.dart';
 import 'package:flutter/material.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 import 'package:flutter_localizations/flutter_localizations.dart' show GlobalCupertinoLocalizations, GlobalMaterialLocalizations, GlobalWidgetsLocalizations;
@@ -43,7 +44,6 @@ class MySalaryApp extends StatelessWidget {
         '/profile': (_) => const ProfilePage(),
         '/home': (_) => const HomePage(),
         '/addJob': (_) => JobInfoPage(),
-        // '/salaryInfo': (_) => const SalaryInfoPage(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/jobInfo') {
@@ -56,7 +56,7 @@ class MySalaryApp extends StatelessWidget {
         if (settings.name == '/jobDashboard') {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
-            builder: (context) => CalendarPage(jobId: args['jobId'] as int),
+            builder: (context) => JobDashboardPage(jobId: args['jobId'] as int),
           );
         }
 
@@ -67,7 +67,14 @@ class MySalaryApp extends StatelessWidget {
           );
         }
 
-        if (settings.name == '/addManual') {
+        if (settings.name == '/addManually') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => CalendarPage(jobId: args['jobId'] as int),
+          );
+        }
+
+        if (settings.name == '/salaryInfo') {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
             builder: (context) => CalendarPage(jobId: args['jobId'] as int),

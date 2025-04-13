@@ -52,32 +52,63 @@ class HomePageState extends State<HomePage> {
         title: const Text('My Jobs'),
         automaticallyImplyLeading: false, // Prevent Flutter from automatically adding a back button
       ),
-      body: Stack(
-        children: [
-          FutureBuilder<List<JobInfo>>(
-            future: fetchJobs(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text('No jobs found.'));
-              }
-
-              final jobs = snapshot.data!;
-              return ListView(
-                children: jobs.map((job) {
-                  return ListTile(
-                    title: Text(job.employerName!),
-                    onTap: () =>
-                        Navigator.pushNamed(context, '/jobDashboard', arguments: {'jobId': job.id}),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              FutureBuilder<List<JobInfo>>(
+                future: fetchJobs(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No jobs found.'));
+                  }
+                  final jobs = snapshot.data!;
+                  return ListView(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: jobs.map((job) {
+                      return ListTile(
+                        title: Text(job.employerName!),
+                        onTap: () =>
+                            Navigator.pushNamed(context, '/jobDashboard', arguments: {'jobId': job.id}),
+                      );
+                    }).toList(),
                   );
-                }).toList(),
-              );
-            },
+                },
+              ),
+              Container(
+                padding: const EdgeInsets.all(4),
+                margin: const EdgeInsets.only(top: 8),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(2, 2),
+                    )
+                  ],
+                ),
+                child: TextButton(
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    '/addJob'
+                  ),
+                  child: const Text(
+                    'Add work day',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
@@ -90,14 +121,6 @@ class HomePageState extends State<HomePage> {
               onPressed: () => Navigator.pushReplacementNamed(
                 context,
                 '/home'
-              )
-            ),
-            const SizedBox(width: 40.0),
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () => Navigator.pushNamed(
-                context,
-                '/addJob'
               )
             ),
             const SizedBox(width: 40.0),
