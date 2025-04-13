@@ -35,7 +35,7 @@ class HomePageState extends State<HomePage> {
     final response = await _httpService.get('myJobs');
     List<dynamic> jsonList = List.from(response);
     List<JobInfo> jobs = [];
-    for (int i = 0; i < jsonList.length; i ++) {
+    for (int i = 0; i < jsonList.length; i++) {
       jobs.add(JobInfo.fromJson(jsonList[i]));
     }
 
@@ -50,10 +50,10 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Jobs'),
-        automaticallyImplyLeading: false, // Prevent Flutter from automatically adding a back button
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -67,43 +67,72 @@ class HomePageState extends State<HomePage> {
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Center(child: Text('No jobs found.'));
                   }
+
                   final jobs = snapshot.data!;
-                  return ListView(
+                  return ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: jobs.map((job) {
-                      return ListTile(
-                        title: Text(job.employerName!),
-                        onTap: () =>
-                            Navigator.pushNamed(context, '/jobDashboard', arguments: {'jobId': job.id}),
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: jobs.length,
+                    itemBuilder: (context, index) {
+                      final job = jobs[index];
+                      return Card(
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 20),
+                          title: Text(
+                            job.employerName ?? 'Unnamed Employer',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/jobDashboard',
+                              arguments: {'jobId': job.id},
+                            );
+                          },
+                        ),
                       );
-                    }).toList(),
+                    },
                   );
                 },
               ),
-              Container(
-                padding: const EdgeInsets.all(4),
-                margin: const EdgeInsets.only(top: 8),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 4,
-                      offset: Offset(2, 2),
-                    )
-                  ],
-                ),
-                child: TextButton(
-                  onPressed: () => Navigator.pushNamed(
-                    context,
-                    '/addJob'
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  style: ButtonStyle(
+                    padding: WidgetStateProperty.all(
+                      const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    backgroundColor:
+                    WidgetStateProperty.all<Color>(Colors.blue),
+                    foregroundColor:
+                    WidgetStateProperty.all<Color>(Colors.white),
+                    elevation: WidgetStateProperty.resolveWith<double>(
+                          (states) =>
+                      states.contains(WidgetState.pressed) ? 2 : 4,
+                    ),
+                    shape: WidgetStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
                   ),
-                  child: const Text(
-                    'Add work day',
-                    style: TextStyle(color: Colors.white),
+                  icon: const Icon(Icons.add),
+                  label: const Text(
+                    'Add Job',
+                    style: TextStyle(fontSize: 18),
                   ),
+                  onPressed: () => Navigator.pushNamed(context, '/add'),
                 ),
               ),
             ],
@@ -118,23 +147,17 @@ class HomePageState extends State<HomePage> {
           children: <Widget>[
             IconButton(
               icon: const Icon(Icons.home),
-              onPressed: () => Navigator.pushReplacementNamed(
-                context,
-                '/home'
-              )
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, '/home'),
             ),
             const SizedBox(width: 40.0),
             IconButton(
               icon: const Icon(Icons.person),
-              onPressed: () => Navigator.pushNamed(
-                context,
-                '/profile'
-              )
+              onPressed: () => Navigator.pushNamed(context, '/profile'),
             ),
           ],
         ),
       ),
     );
   }
-
 }

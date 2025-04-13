@@ -1,15 +1,14 @@
 import 'dart:convert';
-
-import 'package:client/Service/StorageService.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/JobInfo.dart';
 import '../Service/HttpService.dart';
 import '../Service/ServiceLocator.dart';
+import '../Service/StorageService.dart';
 
 class JobDashboardPage extends StatefulWidget {
-  dynamic jobId;
-  JobDashboardPage({super.key, this.jobId});
+  final dynamic jobId;
+  const JobDashboardPage({super.key, this.jobId});
 
   @override
   _JobDashboardPageState createState() => _JobDashboardPageState();
@@ -22,8 +21,8 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
   String _workMode = 'workFromOffice';
   bool _isPressed = false;
   bool _isWorking = false;
-  JobInfo _jobInfo = new JobInfo();
-  
+  JobInfo _jobInfo = JobInfo();
+
   @override
   void initState() {
     super.initState();
@@ -33,43 +32,47 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
   Future<List<JobInfo>> fetchJobs() async {
     final response = await _httpService.get('myJobs');
     List<dynamic> jsonList = List.from(response);
-    List<JobInfo> jobs = [];
-    for (int i = 0; i < jsonList.length; i ++) {
-      jobs.add(JobInfo.fromJson(jsonList[i]));
-    }
+    List<JobInfo> jobs = jsonList.map((e) => JobInfo.fromJson(e)).toList();
 
-    List<Map<String, dynamic>> jobsJson = jobs.map((job) => job.toJson()).toList();
-    String jobsJsonString = json.encode(jobsJson);
+    String jobsJsonString = json.encode(jobs.map((job) => job.toJson()).toList());
     _storageService.save('myJobs', jobsJsonString);
+
     return jobs;
   }
-  
+
   void initResources() async {
     await fetchJobs();
-    JobInfo? jobInfo = (await _storageService.getJobById(widget.jobId!))!;
+    JobInfo? jobInfo = await _storageService.getJobById(widget.jobId!);
+    if (jobInfo == null) return;
+
     setState(() {
       _jobInfo = jobInfo;
-      _isPressed = (_jobInfo.currWorkType == null) ? false : true;
+      _isPressed = jobInfo.currWorkType != null;
       _isWorking = _isPressed;
-      _workMode = (_isPressed) ? _jobInfo.currWorkType! : _workMode;
+      _workMode = _isPressed ? jobInfo.currWorkType! : _workMode;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Job Dashboard')),
-      body: Padding(
+      appBar: AppBar(
+        title: const Text('Job Dashboard'),
+        centerTitle: true,
+        backgroundColor: Colors.grey[100],
+        foregroundColor: Colors.black87,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
               'Work Mode',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            if (!_isWorking) ...[
-              const SizedBox(height: 12),
+            const SizedBox(height: 12),
+            if (!_isWorking)
               SegmentedButton<String>(
                 segments: const [
                   ButtonSegment(
@@ -90,24 +93,17 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
                   });
                 },
                 showSelectedIcon: false,
-                style: ButtonStyle(
-                  padding: MaterialStateProperty.all(
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
-                ),
-
               ),
-            ],
             const SizedBox(height: 28),
             GestureDetector(
               onTapDown: (_) => setState(() => _isPressed = true),
               onTapUp: (_) => setState(() => _isPressed = false),
               onTapCancel: () => setState(() => _isPressed = false),
-              onTap: () {
+              onTap: () async {
                 setState(() {
                   _isWorking = !_isWorking;
                 });
-
-                _httpService.put('startWorkDay/${widget.jobId}/$_workMode', {});
+                await _httpService.put('startWorkDay/${widget.jobId}/$_workMode', {});
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 150),
@@ -135,65 +131,51 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Text(
               _isWorking ? 'Stop Work Day' : 'Start Work Day',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
-            const SizedBox(height: 28),
-            _buildActionButton(
-              context,
+            const SizedBox(height: 32),
+
+            /// Action Buttons Section
+            _buildDashboardButton(
               icon: Icons.work_outline,
               label: 'Job Info',
-              color: Colors.blueGrey,
               onPressed: () => Navigator.pushNamed(
                 context,
                 '/jobInfo',
-                arguments: {
-                  'jobId': widget.jobId
-                }
+                arguments: {'jobId': widget.jobId},
               ),
             ),
             const SizedBox(height: 16),
-            _buildActionButton(
-              context,
+            _buildDashboardButton(
               icon: Icons.calendar_month,
               label: 'Calendar',
-              color: Colors.limeAccent,
               onPressed: () => Navigator.pushNamed(
-                  context,
-                  '/calendar',
-                  arguments: {
-                    'jobId': widget.jobId
-                  }
+                context,
+                '/calendar',
+                arguments: {'jobId': widget.jobId},
               ),
             ),
             const SizedBox(height: 16),
-            _buildActionButton(
-              context,
+            _buildDashboardButton(
               icon: Icons.edit_calendar,
               label: 'Add Work Day Manually',
-              color: Colors.blue,
               onPressed: () => Navigator.pushNamed(
-                  context,
-                  '/addManually',
-                  arguments: {
-                    'jobId': widget.jobId
-                  }
+                context,
+                '/addManually',
+                arguments: {'jobId': widget.jobId},
               ),
             ),
             const SizedBox(height: 16),
-            _buildActionButton(
-              context,
+            _buildDashboardButton(
               icon: Icons.attach_money,
               label: 'Salary Info',
-              color: Colors.green,
               onPressed: () => Navigator.pushNamed(
-                  context,
-                  '/salaryInfo',
-                  arguments: {
-                    'jobId': widget.jobId
-                  }
+                context,
+                '/salaryInfo',
+                arguments: {'jobId': widget.jobId},
               ),
             ),
           ],
@@ -201,7 +183,8 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
       ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
-        notchMargin: 4.0,
+        color: Colors.grey[100],
+        notchMargin: 6.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -220,45 +203,29 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
     );
   }
 
-  Widget _buildActionButton(
-      BuildContext context, {
-        required IconData icon,
-        required String label,
-        required Color color,
-        required VoidCallback onPressed,
-        Color? pressedColor,
-      }) {
+  Widget _buildDashboardButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton.icon(
-        style: ButtonStyle(
-          padding: WidgetStateProperty.all(
-            const EdgeInsets.symmetric(vertical: 16),
-          ),
-          backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                (states) {
-              if (states.contains(WidgetState.pressed)) {
-                return pressedColor ?? color;
-              }
-              return color;
-            },
-          ),
-          foregroundColor: WidgetStateProperty.all(Colors.white),
-          elevation: WidgetStateProperty.resolveWith<double>(
-                (states) => states.contains(WidgetState.pressed) ? 2 : 4,
-          ),
-          shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
-        ),
-        icon: Icon(icon, size: 24),
-        label: Text(
-          label,
-          style: const TextStyle(fontSize: 18),
-        ),
+      child: OutlinedButton.icon(
         onPressed: onPressed,
+        icon: Icon(icon, size: 24),
+        label: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 18),
+          ),
+        ),
+        style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          side: BorderSide(color: Colors.grey.shade300),
+          foregroundColor: Colors.black87,
+          backgroundColor: Colors.grey.shade100,
+        ),
       ),
     );
   }
