@@ -41,7 +41,7 @@ public class WorkDayService {
                                             workType, jobInfo.getCurrStart(), OffsetDateTime.now());
             validate(workDay, phoneNumber);
             jobInfo.setCurrStart(null);
-            jobInfo.setCurrWorkType(workType);
+            jobInfo.setCurrWorkType(null);
             jobInfoService.validate(jobInfo, phoneNumber);
             workDayRepository.save(workDay);
             jobInfoService.updateJob(jobInfo, phoneNumber);

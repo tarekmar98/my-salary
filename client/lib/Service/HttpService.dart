@@ -40,7 +40,7 @@ class HttpService {
     );
 
     _handleError(response);
-    return json.decode(response.body);
+    return (response.body.isNotEmpty) ? json.decode(response.body) : null;
   }
 
   Future<dynamic> delete(String endpoint) async {
