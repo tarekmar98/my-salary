@@ -201,6 +201,7 @@ class _JobInfoPageState extends State<JobInfoPage> {
                   ],
                 ),
                 if (_selectedSalaryType != null) ...[
+                  const SizedBox(height: 8.0),
                   TextField(
                     controller: _salaryController,
                     decoration: InputDecoration(
@@ -257,6 +258,7 @@ class _JobInfoPageState extends State<JobInfoPage> {
                   ],
                 ),
                 if (_selectedFoodType != null) ...[
+                  const SizedBox(height: 8.0),
                   TextField(
                     controller: _foodController,
                     decoration: InputDecoration(
@@ -313,6 +315,7 @@ class _JobInfoPageState extends State<JobInfoPage> {
                   ],
                 ),
                 if (_selectedTravelType != null) ...[
+                  const SizedBox(height: 8.0),
                   TextField(
                     controller: _travelController,
                     decoration: InputDecoration(
@@ -545,6 +548,7 @@ class _JobInfoPageState extends State<JobInfoPage> {
                 'Select your night shift start hour:',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
+              const SizedBox(height: 10.0),
               DateTimeInput(
                 weekDayEnabled: false,
                 onChanged: (value) {

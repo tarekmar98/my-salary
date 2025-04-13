@@ -172,6 +172,25 @@ class _AddWorkDayPageState extends State<AddWorkDayPage> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 4.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.home),
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, '/home'),
+            ),
+            const SizedBox(width: 40.0),
+            IconButton(
+              icon: const Icon(Icons.person),
+              onPressed: () => Navigator.pushNamed(context, '/profile'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
