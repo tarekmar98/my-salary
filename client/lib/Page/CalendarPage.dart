@@ -163,7 +163,6 @@ class _CalendarPageState extends State<CalendarPage> {
                     setState(() {
                       _selectedDay = selected;
                       _focusedDay = focused;
-                      initResources();
                     });
                   },
                   onPageChanged: (focusedDay) {
