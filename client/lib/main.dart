@@ -1,4 +1,5 @@
 import 'package:client/Page/JobDashboardPage.dart';
+import 'package:client/Page/SalaryInfoPage.dart';
 import 'package:flutter/material.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 import 'package:flutter_localizations/flutter_localizations.dart' show GlobalCupertinoLocalizations, GlobalMaterialLocalizations, GlobalWidgetsLocalizations;
@@ -77,7 +78,7 @@ class MySalaryApp extends StatelessWidget {
         if (settings.name == '/salaryInfo') {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
-            builder: (context) => CalendarPage(jobId: args['jobId'] as int),
+            builder: (context) => SalaryInfoPage(jobId: args['jobId'] as int),
           );
         }
 
