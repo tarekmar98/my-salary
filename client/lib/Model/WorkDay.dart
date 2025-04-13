@@ -27,10 +27,10 @@ class WorkDay {
       jobId: (json['jobId'] as int).toInt(),
       workYear: (json['workYear'] as int).toInt(),
       workMonth: (json['workMonth'] as int).toInt(),
-      workDate: DateTime.parse(json['workDate']),
+      workDate: DateTime.parse(json['workDate']).toLocal(),
       workType: json['workType'],
-      startTime: DateTime.parse(json['startTime']),
-      endTime: DateTime.parse(json['endTime']),
+      startTime: DateTime.parse(json['startTime']).toLocal(),
+      endTime: DateTime.parse(json['endTime']).toLocal(),
     );
   }
 
@@ -40,10 +40,10 @@ class WorkDay {
       'jobId': jobId,
       'workYear': workYear,
       'workMonth': workMonth,
-      'workDate': workDate,
+      'workDate': workDate?.toLocal().toIso8601String(),
       'workType': workType,
-      'startTime': startTime,
-      'endTime': endTime,
+      'startTime': startTime?.toLocal().toIso8601String(),
+      'endTime': endTime?.toLocal().toIso8601String(),
     };
   }
 }

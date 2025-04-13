@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 import 'package:flutter_localizations/flutter_localizations.dart' show GlobalCupertinoLocalizations, GlobalMaterialLocalizations, GlobalWidgetsLocalizations;
 
+import 'Page/AddWorkDayPage.dart';
 import 'Page/JobInfoPage.dart';
 import 'Page/ProfilePage.dart';
 import 'Page/HomePage.dart';
@@ -71,7 +72,7 @@ class MySalaryApp extends StatelessWidget {
         if (settings.name == '/addManually') {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
-            builder: (context) => CalendarPage(jobId: args['jobId'] as int),
+            builder: (context) => AddWorkDayPage(jobId: args['jobId'] as int),
           );
         }
 
