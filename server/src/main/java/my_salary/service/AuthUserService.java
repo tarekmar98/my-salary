@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 
 
@@ -43,7 +44,7 @@ public class AuthUserService {
         if (Duration.between(authUser.getLastTry().toInstant(), Instant.now()).toMinutes() < resourcesService.statics.get("MinLoginTimeDiffMin")) {
             authUser.setNumTries(authUser.getNumTries() + 1);
         } else {
-            authUser.setLastTry(OffsetDateTime.now());
+            authUser.setLastTry(OffsetDateTime.now(ZoneOffset.UTC));
             authUser.setNumTries(1);
         }
 

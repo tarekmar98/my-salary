@@ -47,7 +47,7 @@ class _SalaryInfoPageState extends State<SalaryInfoPage> {
         '${_focusedYear}');
 
     setState(() {
-      _salaryInfo = SalaryInfo.fromJson(response);
+      _salaryInfo = SalaryInfo.fromJson(json.decode(response.body));
     });
   }
 

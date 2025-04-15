@@ -51,8 +51,8 @@ CREATE TABLE IF NOT EXISTS work_day (
     job_id INT,
     work_year INT,
     work_month INT,
-    work_date DATE,
     work_type VARCHAR(255),
+    time_diff_utc FLOAT,
     start_time TIMESTAMPTZ,
     end_time TIMESTAMPTZ
 );

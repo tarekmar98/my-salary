@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -30,7 +32,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   Future<void> initResources() async {
     final response = await _httpService.get('myWorkDays/${widget.jobId}/${_focusedDay.month}/${_focusedDay.year}');
-    List<dynamic> jsonList = List.from(response);
+    List<dynamic> jsonList = List.from(json.decode(response.body));
 
     final Set<DateTime> days = {};
     final List<WorkDay> list = [];

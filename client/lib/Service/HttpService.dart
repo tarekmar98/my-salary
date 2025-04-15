@@ -26,8 +26,7 @@ class HttpService {
       headers: await headers,
     );
 
-    _handleError(response);
-    return json.decode(response.body);
+    return response;
   }
 
   Future<dynamic> put(String endpoint, Map<String, dynamic> body) async {
@@ -39,8 +38,7 @@ class HttpService {
       body: json.encode(body),
     );
 
-    _handleError(response);
-    return (response.body.isNotEmpty) ? json.decode(response.body) : null;
+    return response;
   }
 
   Future<dynamic> delete(String endpoint) async {
@@ -51,8 +49,7 @@ class HttpService {
       headers: await headers,
     );
 
-    _handleError(response);
-    return json.decode(response.body);
+    return response;
   }
 
   Future<Map<String, String>> _buildHeaders() async {
@@ -63,13 +60,5 @@ class HttpService {
       'phoneNumber': '$_phoneNumber',
       if (_token != null) 'Authorization': '$_token',
     };
-  }
-
-  void _handleError(http.Response response) {
-    if (response.statusCode >= 400) {
-      throw Exception(
-        'HTTP ${response.statusCode}: ${response.body}',
-      );
-    }
   }
 }

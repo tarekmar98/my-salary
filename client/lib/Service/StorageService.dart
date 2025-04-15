@@ -21,14 +21,19 @@ class StorageService {
 
   Future<JobInfo?> getJobById(int id) async {
     String allJobs = await get('myJobs');
-  List<dynamic> decodedJobs = json.decode(allJobs);
-  List<JobInfo> jobs = decodedJobs.map((jobJson) => JobInfo.fromJson(jobJson)).toList();
-  for (JobInfo job in jobs) {
-      if (job.id == id) {
-        return job;
+    List<dynamic> decodedJobs = json.decode(allJobs);
+    List<JobInfo> jobs = decodedJobs.map((jobJson) => JobInfo.fromJson(jobJson)).toList();
+    for (JobInfo job in jobs) {
+        if (job.id == id) {
+          return job;
+        }
       }
-    }
 
     return null;
+  }
+
+  Future<void> clear() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 }

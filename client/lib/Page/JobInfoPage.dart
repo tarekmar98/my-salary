@@ -43,7 +43,7 @@ class _JobInfoPageState extends State<JobInfoPage> {
   PaymentType? _selectedSalaryType = PaymentType.perHour;
   PaymentType? _selectedFoodType = PaymentType.perDay;
   PaymentType? _selectedTravelType = PaymentType.perDay;
-  DateFormat _format = new DateFormat("HH:MM:SS");
+  bool jobInfoUpdated = false;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -100,15 +100,23 @@ class _JobInfoPageState extends State<JobInfoPage> {
         _breakTimeController.text = jobInfo.breakTimeMinutes!.toString();
         _workDayHourController.text = jobInfo.dayWorkHours!.toString();
         _weekEndPercentageController.text = (jobInfo.weekEndInfo?.weekEndPercentage)!.toString();
-        _eveningPercentageController.text = (jobInfo.shiftsInfo?.eveningPercentage)!.toString();
-        _nightPercentageController.text = (jobInfo.shiftsInfo?.nightPercentage)!.toString();
+        if (jobInfo.shifts == true) {
+          _eveningPercentageController.text =
+              (jobInfo.shiftsInfo?.eveningPercentage)!.toString();
+          _nightPercentageController.text =
+              (jobInfo.shiftsInfo?.nightPercentage)!.toString();
+        }
+        jobInfoUpdated = true;
       });
     } else {
-      jobExists = false;
-      _jobInfo.shifts = false;
-      _jobInfo.overTimeInfo = new OverTimeInfo();
-      _jobInfo.shiftsInfo = new ShiftsInfo();
-      _jobInfo.weekEndInfo = new WeekEndInfo();
+      setState(() {
+        jobExists = false;
+        _jobInfo.shifts = false;
+        _jobInfo.overTimeInfo = new OverTimeInfo();
+        _jobInfo.shiftsInfo = new ShiftsInfo();
+        _jobInfo.weekEndInfo = new WeekEndInfo();
+        jobInfoUpdated = true;
+      });
     }
   }
 
@@ -133,6 +141,10 @@ class _JobInfoPageState extends State<JobInfoPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (jobInfoUpdated == false) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Job Info')),
       body: Padding(
@@ -397,10 +409,7 @@ class _JobInfoPageState extends State<JobInfoPage> {
                   _jobInfo.overTimeInfo?.overTimeStartHour125 = value.hour;
                 });
               },
-              initialVal: (
-                hour: jobExists? _jobInfo.overTimeInfo!.overTimeStartHour125 : null,
-                weekday: null
-              ),
+              initialValHour: jobExists? _jobInfo.overTimeInfo!.overTimeStartHour125 : null,
             ),
             const SizedBox(height: 16.0),
             const Text(
@@ -415,10 +424,7 @@ class _JobInfoPageState extends State<JobInfoPage> {
                   _jobInfo.overTimeInfo?.overTimeStartHour150 = value.hour;
                 });
               },
-              initialVal: (
-                hour: jobExists? _jobInfo.overTimeInfo!.overTimeStartHour150 : null,
-                weekday: null
-              ),
+              initialValHour: jobExists? _jobInfo.overTimeInfo!.overTimeStartHour150 : null,
             ),
             const SizedBox(height: 16.0),
             const Text(
@@ -433,10 +439,7 @@ class _JobInfoPageState extends State<JobInfoPage> {
                   _jobInfo.overTimeInfo?.overTimeStartHour200 = value.hour;
                 });
               },
-              initialVal: (
-                hour: jobExists? _jobInfo.overTimeInfo!.overTimeStartHour200 : null,
-                weekday: null
-              ),
+              initialValHour: jobExists? _jobInfo.overTimeInfo!.overTimeStartHour200 : null,
             ),
             const SizedBox(height: 16.0),
             const Text(
@@ -452,10 +455,8 @@ class _JobInfoPageState extends State<JobInfoPage> {
                   _jobInfo.weekEndInfo?.weekEndStartHour = value.hour;
                 });
               },
-              initialVal: (
-                hour: jobExists? _jobInfo.weekEndInfo!.weekEndStartHour : null,
-                weekday: jobExists? _jobInfo.weekEndInfo!.weekEndStartDay : null
-              ),
+              initialValHour: jobExists? _jobInfo.weekEndInfo!.weekEndStartHour : null,
+              initialValWeekday: jobExists? _jobInfo.weekEndInfo!.weekEndStartDay : null
             ),
             const SizedBox(height: 16.0),
             const Text(
@@ -471,10 +472,8 @@ class _JobInfoPageState extends State<JobInfoPage> {
                   _jobInfo.weekEndInfo?.weekEndEndHour = value.hour;
                 });
               },
-              initialVal: (
-                hour: jobExists? _jobInfo.weekEndInfo!.weekEndEndHour : null,
-                weekday: jobExists? _jobInfo.weekEndInfo!.weekEndEndDay : null
-              ),
+              initialValHour: jobExists? _jobInfo.weekEndInfo!.weekEndEndHour : null,
+              initialValWeekday: jobExists? _jobInfo.weekEndInfo!.weekEndEndDay : null
             ),
             const SizedBox(height: 16.0),
             TextField(
@@ -520,10 +519,8 @@ class _JobInfoPageState extends State<JobInfoPage> {
                     _jobInfo.shiftsInfo?.morningStartHour = value.hour;
                   });
                 },
-                initialVal: (
-                  hour: jobExists? _jobInfo.shiftsInfo!.morningStartHour : null,
-                  weekday: null
-                ),
+                initialValHour: jobExists? _jobInfo.shiftsInfo!.morningStartHour : null,
+                initialValWeekday: null
               ),
               const SizedBox(height: 16.0),
               const Text(
@@ -538,10 +535,8 @@ class _JobInfoPageState extends State<JobInfoPage> {
                     _jobInfo.shiftsInfo?.eveningStartHour = value.hour;
                   });
                 },
-                initialVal: (
-                  hour: jobExists? _jobInfo.shiftsInfo!.eveningStartHour : null,
-                  weekday: null
-                ),
+                initialValHour: jobExists? _jobInfo.shiftsInfo!.eveningStartHour : null,
+                initialValWeekday: null
               ),
               const SizedBox(height: 16.0),
               const Text(
@@ -556,10 +551,8 @@ class _JobInfoPageState extends State<JobInfoPage> {
                     _jobInfo.shiftsInfo?.nightStartHour = value.hour;
                   });
                 },
-                initialVal: (
-                  hour: jobExists? _jobInfo.shiftsInfo!.nightStartHour : null,
-                  weekday: null
-                ),
+                initialValHour: jobExists? _jobInfo.shiftsInfo!.nightStartHour : null,
+                initialValWeekday: null
               ),
               const SizedBox(height: 16.0),
               TextField(
@@ -595,8 +588,13 @@ class _JobInfoPageState extends State<JobInfoPage> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () => _submit(),
-              child: const Text('Save Job'),
-            )
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 48),
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: const Text('Save Job', style: TextStyle(fontSize: 16)),
+            ),
           ]),
         ),
       ),

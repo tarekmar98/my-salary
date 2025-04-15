@@ -21,6 +21,7 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
   String _workMode = 'workFromOffice';
   bool _isPressed = false;
   bool _isWorking = false;
+  double timeDiffUtc = DateTime.now().timeZoneOffset.inHours as double;
   JobInfo _jobInfo = JobInfo();
 
   @override
@@ -31,7 +32,7 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
 
   Future<List<JobInfo>> fetchJobs() async {
     final response = await _httpService.get('myJobs');
-    List<dynamic> jsonList = List.from(response);
+    List<dynamic> jsonList = List.from(json.decode(response.body));
     List<JobInfo> jobs = jsonList.map((e) => JobInfo.fromJson(e)).toList();
 
     String jobsJsonString = json.encode(jobs.map((job) => job.toJson()).toList());
@@ -51,6 +52,21 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
       _isWorking = _isPressed;
       _workMode = _isPressed ? jobInfo.currWorkType! : _workMode;
     });
+  }
+
+  Future<void> _delete() async {
+    try {
+      _httpService.delete('deleteWorkDay/${widget.jobId}');
+
+      Navigator.pushReplacementNamed(context, '/home');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Job updated successfully')),
+      );
+    } catch(e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    }
   }
 
   @override
@@ -103,7 +119,19 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
                 setState(() {
                   _isWorking = !_isWorking;
                 });
-                await _httpService.put('startWorkDay/${widget.jobId}/$_workMode', {});
+                try {
+                  await _httpService.put(
+                      'startWorkDay/${widget.jobId}/$_workMode/$timeDiffUtc',
+                      {});
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Work day submitted successfully')),
+                  );
+                } catch(e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(e.toString())),
+                  );
+                }
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 150),
@@ -144,8 +172,7 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
               label: 'Job Info',
               onPressed: () => Navigator.pushNamed(
                 context,
-                '/jobInfo',
-                arguments: {'jobId': widget.jobId},
+                '/jobInfo/${widget.jobId}',
               ),
             ),
             const SizedBox(height: 16),
@@ -178,6 +205,20 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
                 arguments: {'jobId': widget.jobId},
               ),
             ),
+            const SizedBox(height: 26),
+            _buildDashboardButton(
+              onPressed: _delete,
+              icon: Icons.delete,
+              label: 'Delete Job',
+              style: ButtonStyle(
+                minimumSize: WidgetStateProperty.all(Size(double.infinity, 48)),
+                backgroundColor: WidgetStateProperty.all(Colors.redAccent),
+                foregroundColor: WidgetStateProperty.all(Colors.white),
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -207,26 +248,47 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
     required IconData icon,
     required String label,
     required VoidCallback onPressed,
+    ButtonStyle? style,
   }) {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton.icon(
-        onPressed: onPressed,
-        icon: Icon(icon, size: 24),
-        label: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Text(
-            label,
-            style: const TextStyle(fontSize: 18),
+    if (style == null) {
+      return SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: onPressed,
+          icon: Icon(icon, size: 24),
+          label: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 18),
+            ),
+          ),
+          style: OutlinedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16)),
+            side: BorderSide(color: Colors.grey.shade300),
+            foregroundColor: Colors.black87,
+            backgroundColor: Colors.grey.shade100,
           ),
         ),
-        style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          side: BorderSide(color: Colors.grey.shade300),
-          foregroundColor: Colors.black87,
-          backgroundColor: Colors.grey.shade100,
+      );
+    }
+    else {
+      return SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: onPressed,
+          icon: Icon(icon, size: 24),
+          label: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 18),
+            ),
+          ),
+          style: style,
         ),
-      ),
-    );
+      );
+    }
   }
 }

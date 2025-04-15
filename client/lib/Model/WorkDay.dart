@@ -9,6 +9,7 @@ class WorkDay {
   String? workType;
   DateTime? startTime;
   DateTime? endTime;
+  double? timeDiffUtc;
 
   WorkDay({
     this.id,
@@ -19,18 +20,21 @@ class WorkDay {
     this.workType,
     this.startTime,
     this.endTime,
+    this.timeDiffUtc
   });
 
   factory WorkDay.fromJson(Map<String, dynamic> json) {
+    DateTime startTime = DateTime.parse(json['startTime']).toUtc().toLocal();
     return WorkDay(
       id: (json['id'] as int).toInt(),
       jobId: (json['jobId'] as int).toInt(),
       workYear: (json['workYear'] as int).toInt(),
       workMonth: (json['workMonth'] as int).toInt(),
-      workDate: DateTime.parse(json['workDate']).toLocal(),
+      workDate: DateTime(startTime.year, startTime.month, startTime.day).toUtc().toLocal(),
       workType: json['workType'],
-      startTime: DateTime.parse(json['startTime']).toLocal(),
-      endTime: DateTime.parse(json['endTime']).toLocal(),
+      startTime: startTime,
+      endTime: DateTime.parse(json['endTime']).toUtc().toLocal(),
+      timeDiffUtc: (json['timeDiffUtc'] as double).toDouble()
     );
   }
 
@@ -40,10 +44,10 @@ class WorkDay {
       'jobId': jobId,
       'workYear': workYear,
       'workMonth': workMonth,
-      'workDate': workDate?.toLocal().toIso8601String(),
       'workType': workType,
-      'startTime': startTime?.toLocal().toIso8601String(),
-      'endTime': endTime?.toLocal().toIso8601String(),
+      'startTime': startTime?.toUtc().toIso8601String(),
+      'endTime': endTime?.toUtc().toIso8601String(),
+      'timeDiffUtc': timeDiffUtc
     };
   }
 }

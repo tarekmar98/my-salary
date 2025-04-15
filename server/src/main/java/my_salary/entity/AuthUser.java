@@ -6,6 +6,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 
 @Getter
@@ -26,7 +27,7 @@ public class AuthUser {
     public AuthUser(String phoneNumber) {
         this.phoneNumber = phoneNumber;
         this.numTries = 0;
-        this.lastTry = OffsetDateTime.now();
+        this.lastTry = OffsetDateTime.now(ZoneOffset.UTC);
         this.sameOtpTries = 0;
     }
 

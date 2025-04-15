@@ -22,8 +22,11 @@ class _AddWorkDayPageState extends State<AddWorkDayPage> {
   @override
   void initState() {
     super.initState();
-    _workDay.jobId = widget.jobId;
-    _workDay.workType = 'workFromOffice';
+    setState(() {
+      _workDay.jobId = widget.jobId;
+      _workDay.workType = 'workFromOffice';
+      _workDay.timeDiffUtc = DateTime.now().timeZoneOffset.inHours as double;
+    });
   }
 
   Future<void> _pickDate() async {
@@ -64,11 +67,17 @@ class _AddWorkDayPageState extends State<AddWorkDayPage> {
         _workDay.startTime = combineDateAndTime(_workDay.workDate!, _startTime!);
         _workDay.endTime = combineDateAndTime(_workDay.workDate!, _endTime!);
       });
-      await _httpService.put('addWorkDay', _workDay.toJson());
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Work day submitted successfully')),
-      );
-      Navigator.pop(context);
+      try {
+        await _httpService.put('addWorkDay', _workDay.toJson());
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Work day submitted successfully')),
+        );
+        Navigator.pop(context);
+      } catch(e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
 
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -18,8 +18,9 @@ public class WorkDayController {
     @PutMapping("/startWorkDay/{jobId}/{workType}")
     public ResponseEntity<?> startWorkDay(@PathVariable("jobId") Long jobId,
                                           @PathVariable("workType") String workType,
+                                          @PathVariable("timeDiffUtc") Float timeDiffUtc,
                                           @RequestHeader("phoneNumber") String phoneNumber) {
-        return ResponseEntity.ok().body(workDayService.startWorkDay(jobId, workType, phoneNumber));
+        return ResponseEntity.ok().body(workDayService.startWorkDay(jobId, workType, phoneNumber, timeDiffUtc));
     }
 
     @GetMapping("/myWorkDays/{jobId}/{salaryMonth}/{salaryYear}")
