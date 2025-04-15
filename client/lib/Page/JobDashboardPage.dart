@@ -139,8 +139,8 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
                 height: 120,
                 decoration: BoxDecoration(
                   color: _isPressed
-                      ? (_isWorking ? Colors.red.shade700 : Colors.green.shade700)
-                      : (_isWorking ? Colors.red : Colors.green),
+                      ? (_isWorking ? Colors.red.shade700 : Colors.blue.shade700)
+                      : (_isWorking ? Colors.red : Colors.blue),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
@@ -165,14 +165,13 @@ class _JobDashboardPageState extends State<JobDashboardPage> {
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 32),
-
-            /// Action Buttons Section
             _buildDashboardButton(
               icon: Icons.work_outline,
               label: 'Job Info',
               onPressed: () => Navigator.pushNamed(
                 context,
-                '/jobInfo/${widget.jobId}',
+                '/jobInfo',
+                arguments: {'jobId': widget.jobId},
               ),
             ),
             const SizedBox(height: 16),

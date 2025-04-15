@@ -15,7 +15,7 @@ public class WorkDayController {
     @Autowired
     WorkDayService workDayService;
 
-    @PutMapping("/startWorkDay/{jobId}/{workType}")
+    @PutMapping("/startWorkDay/{jobId}/{workType}/{timeDiffUtc}")
     public ResponseEntity<?> startWorkDay(@PathVariable("jobId") Long jobId,
                                           @PathVariable("workType") String workType,
                                           @PathVariable("timeDiffUtc") Float timeDiffUtc,

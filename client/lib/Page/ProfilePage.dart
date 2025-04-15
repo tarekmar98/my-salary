@@ -95,101 +95,105 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Profile')),
       body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(children: [
-          DropdownButton<String>(
-            value: _user.country,
-            hint: Text('Select your country'),
-            isExpanded: true,
-            icon: Icon(Icons.arrow_drop_down),
-            items: _countries.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                _cities = List<String>.from(_locations[newValue]);
-                _user.country = newValue!;
-              });
-            },
+        padding: const EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              DropdownButton<String>(
+                value: _user.country,
+                hint: Text('Select your country'),
+                isExpanded: true,
+                icon: Icon(Icons.arrow_drop_down),
+                items: _countries.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _cities = List<String>.from(_locations[newValue]);
+                    _user.country = newValue!;
+                  });
+                },
+              ),
+              DropdownButton<String>(
+                value: _user.city,
+                hint: Text('Select your city'),
+                isExpanded: true,
+                icon: Icon(Icons.arrow_drop_down),
+                items: _cities.map((dynamic value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _user.city = newValue!;
+                  });
+                },
+              ),
+              DropdownButton<String>(
+                value: _user.religion,
+                hint: Text('Select your religion'),
+                isExpanded: true,
+                icon: Icon(Icons.arrow_drop_down),
+                items: _religions.map((dynamic value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _user.religion = newValue!;
+                  });
+                },
+              ),
+              DropdownButton<String>(
+                value: _user.language,
+                hint: Text('Select your language'),
+                isExpanded: true,
+                icon: Icon(Icons.arrow_drop_down),
+                items: _languages.map((dynamic value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _user.language = newValue!;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () => _submit(),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(double.infinity, 48),
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text('Save Profile', style: TextStyle(fontSize: 16)),
+              ),
+              SizedBox(height: 36),
+              ElevatedButton.icon(
+                onPressed: _logout,
+                icon: Icon(Icons.logout),
+                label: Text('Log Out'),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(double.infinity, 48),
+                  backgroundColor: Colors.redAccent,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+            ]
           ),
-          DropdownButton<String>(
-            value: _user.city,
-            hint: Text('Select your city'),
-            isExpanded: true,
-            icon: Icon(Icons.arrow_drop_down),
-            items: _cities.map((dynamic value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                _user.city = newValue!;
-              });
-            },
-          ),
-          DropdownButton<String>(
-            value: _user.religion,
-            hint: Text('Select your religion'),
-            isExpanded: true,
-            icon: Icon(Icons.arrow_drop_down),
-            items: _religions.map((dynamic value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                _user.religion = newValue!;
-              });
-            },
-          ),
-          DropdownButton<String>(
-            value: _user.language,
-            hint: Text('Select your language'),
-            isExpanded: true,
-            icon: Icon(Icons.arrow_drop_down),
-            items: _languages.map((dynamic value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                _user.language = newValue!;
-              });
-            },
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () => _submit(),
-            style: ElevatedButton.styleFrom(
-              minimumSize: Size(double.infinity, 48),
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-            child: const Text('Save Profile', style: TextStyle(fontSize: 16)),
-          ),
-          Spacer(),
-          ElevatedButton.icon(
-            onPressed: _logout,
-            icon: Icon(Icons.logout),
-            label: Text('Log Out'),
-            style: ElevatedButton.styleFrom(
-              minimumSize: Size(double.infinity, 48),
-              backgroundColor: Colors.redAccent,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-          ),
-        ]),
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
