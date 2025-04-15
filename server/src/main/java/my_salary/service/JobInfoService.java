@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 
@@ -129,7 +130,7 @@ public class JobInfoService {
             }
         }
 
-        if (jobInfo.getCurrStart() != null && jobInfo.getCurrStart().isAfter(OffsetDateTime.now())) {
+        if (jobInfo.getCurrStart() != null && jobInfo.getCurrStart().isAfter(OffsetDateTime.now(ZoneOffset.UTC))) {
             throw new IllegalArgumentException("Invalid current start work day!");
         }
     }

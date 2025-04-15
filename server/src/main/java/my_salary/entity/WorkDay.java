@@ -21,22 +21,22 @@ public class WorkDay {
     private Long jobId;
     private Integer workYear;
     private Integer workMonth;
-    private LocalDate workDate;
     private String workType;
     private OffsetDateTime startTime;
     private OffsetDateTime endTime;
+    private Float timeDiffUtc;
 
     public WorkDay() {}
 
-    public WorkDay(Long jobId, Integer workYear, Integer workMonth, LocalDate workDate,
-                   String workType, OffsetDateTime startTime, OffsetDateTime endTime) {
+    public WorkDay(Long jobId, Integer workYear, Integer workMonth, String workType, OffsetDateTime startTime,
+                   OffsetDateTime endTime, Float timeDiffUtc) {
         this.jobId = jobId;
         this.workYear = workYear;
         this.workMonth = workMonth;
-        this.workDate = workDate;
         this.workType = workType;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.timeDiffUtc = timeDiffUtc;
     }
 
     public YearMonth getSalaryMonth() {
@@ -45,6 +45,6 @@ public class WorkDay {
 
     @Override
     public String toString() {
-        return "WorkDay{" + "id=" + id + ", jobId=" + jobId + ", workYear=" + workYear + ", workMonth=" + workMonth + ", workDate=" + workDate + ", workType='" + workType + '\'' + ", startTime=" + startTime + ", endTime=" + endTime + '}';
+        return "WorkDay{" + "id=" + id + ", jobId=" + jobId + ", workYear=" + workYear + ", workMonth=" + workMonth + ", workType='" + workType + '\'' + ", startTime=" + startTime + ", endTime=" + endTime + ", timeDiffUtc=" + timeDiffUtc + '}';
     }
 }

@@ -22,8 +22,11 @@ class _AddWorkDayPageState extends State<AddWorkDayPage> {
   @override
   void initState() {
     super.initState();
-    _workDay.jobId = widget.jobId;
-    _workDay.workType = 'workFromOffice';
+    setState(() {
+      _workDay.jobId = widget.jobId;
+      _workDay.workType = 'workFromOffice';
+      _workDay.timeDiffUtc = DateTime.now().timeZoneOffset.inHours as double;
+    });
   }
 
   Future<void> _pickDate() async {
@@ -64,11 +67,17 @@ class _AddWorkDayPageState extends State<AddWorkDayPage> {
         _workDay.startTime = combineDateAndTime(_workDay.workDate!, _startTime!);
         _workDay.endTime = combineDateAndTime(_workDay.workDate!, _endTime!);
       });
-      await _httpService.put('addWorkDay', _workDay.toJson());
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Work day submitted successfully')),
-      );
-      Navigator.pop(context);
+      try {
+        await _httpService.put('addWorkDay', _workDay.toJson());
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Work day submitted successfully')),
+        );
+        Navigator.pop(context);
+      } catch(e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
 
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -87,89 +96,93 @@ class _AddWorkDayPageState extends State<AddWorkDayPage> {
       appBar: AppBar(title: const Text('Add Work Day')),
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: ListView(
-          children: [
-            const Text(
-              'Work Date',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            ListTile(
-              title: Text(_workDay.workDate == null
-                  ? 'Select date'
-                  : '${_workDay.workDate!.day}/${_workDay.workDate!.month}/${_workDay.workDate!.year}'),
-              trailing: const Icon(Icons.calendar_today),
-              onTap: _pickDate,
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Work Type',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(
-                  value: 'workFromOffice',
-                  label: Text('Office'),
-                  icon: Icon(Icons.apartment),
-                ),
-                ButtonSegment(
-                  value: 'workFromHome',
-                  label: Text('Home'),
-                  icon: Icon(Icons.home_work),
-                ),
-              ],
-              selected: {_workDay.workType!},
-              onSelectionChanged: (newSelection) {
-                setState(() {
-                  _workDay.workType = newSelection.first;
-                });
-              },
-              showSelectedIcon: false,
-              style: ButtonStyle(
-                padding: MaterialStateProperty.all(
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
+        child: SingleChildScrollView(
+          child: ListView(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: [
+              const Text(
+                'Work Date',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Start Time',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            ListTile(
-              title: Text(_startTime == null
-                  ? 'Select start time'
-                  : _startTime!.format(context)),
-              trailing: const Icon(Icons.access_time),
-              onTap: () => _pickTime(true),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'End Time',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            ListTile(
-              title: Text(_endTime == null
-                  ? 'Select end time'
-                  : _endTime!.format(context)),
-              trailing: const Icon(Icons.access_time),
-              onTap: () => _pickTime(false),
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton.icon(
-              onPressed: _submit,
-              icon: const Icon(Icons.save),
-              label: const Text('Save Work Day'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                textStyle: const TextStyle(fontSize: 18),
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+              ListTile(
+                title: Text(_workDay.workDate == null
+                    ? 'Select date'
+                    : '${_workDay.workDate!.day}/${_workDay.workDate!.month}/${_workDay.workDate!.year}'),
+                trailing: const Icon(Icons.calendar_today),
+                onTap: _pickDate,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Work Type',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SegmentedButton<String>(
+                segments: const [
+                  ButtonSegment(
+                    value: 'workFromOffice',
+                    label: Text('Office'),
+                    icon: Icon(Icons.apartment),
+                  ),
+                  ButtonSegment(
+                    value: 'workFromHome',
+                    label: Text('Home'),
+                    icon: Icon(Icons.home_work),
+                  ),
+                ],
+                selected: {_workDay.workType!},
+                onSelectionChanged: (newSelection) {
+                  setState(() {
+                    _workDay.workType = newSelection.first;
+                  });
+                },
+                showSelectedIcon: false,
+                style: ButtonStyle(
+                  padding: MaterialStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
                 ),
               ),
-            )
-          ],
+              const SizedBox(height: 20),
+              const Text(
+                'Start Time',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              ListTile(
+                title: Text(_startTime == null
+                    ? 'Select start time'
+                    : _startTime!.format(context)),
+                trailing: const Icon(Icons.access_time),
+                onTap: () => _pickTime(true),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'End Time',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              ListTile(
+                title: Text(_endTime == null
+                    ? 'Select end time'
+                    : _endTime!.format(context)),
+                trailing: const Icon(Icons.access_time),
+                onTap: () => _pickTime(false),
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton.icon(
+                onPressed: _submit,
+                icon: const Icon(Icons.save),
+                label: const Text('Save Work Day'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  textStyle: const TextStyle(fontSize: 18),
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(

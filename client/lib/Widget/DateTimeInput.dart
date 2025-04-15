@@ -4,13 +4,15 @@ import 'package:intl/intl.dart';
 class DateTimeInput extends StatefulWidget {
   dynamic weekDayEnabled;
   final ValueChanged<({String? weekday, DateTime? hour})>? onChanged;
-  final ({String? weekday, DateTime? hour})? initialVal;
+  final DateTime? initialValHour;
+  final String? initialValWeekday;
 
   DateTimeInput({
     super.key,
     this.onChanged,
     this.weekDayEnabled,
-    this.initialVal
+    this.initialValHour,
+    this.initialValWeekday
   });
 
   @override
@@ -28,17 +30,19 @@ class _DateTimeInputState extends State<DateTimeInput> {
   @override
   void initState() {
     super.initState();
-    if (widget.initialVal?.weekday != null) {
-      _selectedWeekday = widget.initialVal?.weekday;
-    } else {
-      _selectedWeekday = "MONDAY";
-    }
+    setState(() {
+      if (widget.initialValWeekday != null) {
+        _selectedWeekday = widget.initialValWeekday;
+      } else {
+        _selectedWeekday = "MONDAY";
+      }
 
-    if (widget.initialVal?.hour != null) {
-      _selectedHour = widget.initialVal?.hour;
-    } else {
-      _selectedHour = DateFormat("HH:MM:SS").parse("00:00:00");
-    }
+      if (widget.initialValHour != null) {
+        _selectedHour = widget.initialValHour;
+      } else {
+        _selectedHour = DateFormat("HH:MM:SS").parse("00:00:00");
+      }
+    });
   }
 
   @override

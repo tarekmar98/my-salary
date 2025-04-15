@@ -4,6 +4,7 @@ import 'package:client/Service/StorageService.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/JobInfo.dart';
+import '../Model/User.dart';
 import '../Service/HttpService.dart';
 import '../Service/ServiceLocator.dart';
 
@@ -26,14 +27,29 @@ class HomePageState extends State<HomePage> {
 
   void checkPermission() async {
     String? token = await _storageService.get('token');
-    if (token.isEmpty) {
+    if (token.isNotEmpty) {
+      String? user = await _storageService.get('user');
+      if (user.isEmpty) {
+        final response = await _httpService.get('myProfile');
+        if (response.statusCode >= 400) {
+          User newUser = new User();
+          Map<String, dynamic> userJson = newUser.toJson();
+          String userJsonString = json.encode(userJson);
+          _storageService.save('user', userJsonString);
+          Navigator.pushReplacementNamed(context, '/profile');
+        } else {
+          String userJsonString = json.encode(json.decode(response.body));
+          _storageService.save('user', userJsonString);
+        }
+      }
+    } else {
       Navigator.pushReplacementNamed(context, '/signUp');
     }
   }
 
   Future<List<JobInfo>> fetchJobs() async {
     final response = await _httpService.get('myJobs');
-    List<dynamic> jsonList = List.from(response);
+    List<dynamic> jsonList = List.from(json.decode(response.body));
     List<JobInfo> jobs = [];
     for (int i = 0; i < jsonList.length; i++) {
       jobs.add(JobInfo.fromJson(jsonList[i]));

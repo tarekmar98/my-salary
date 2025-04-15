@@ -27,9 +27,23 @@ public class SalaryService {
     @Autowired
     private WorkDayService workDayService;
 
+    public void updateToLocalTime(List<WorkDay> workDays) {
+        for (WorkDay workDay: workDays) {
+            OffsetDateTime start = workDay.getStartTime();
+            start = start.plusHours(workDay.getTimeDiffUtc().longValue());
+            start = start.plusHours((workDay.getTimeDiffUtc().longValue() * 60) % 60);
+            workDay.setStartTime(start);
+            OffsetDateTime end = workDay.getEndTime();
+            end = end.plusHours(workDay.getTimeDiffUtc().longValue());
+            end = end.plusHours((workDay.getTimeDiffUtc().longValue() * 60) % 60);
+            workDay.setEndTime(end);
+        }
+    }
+
     public Salary calcSalaryInfo(Long jobId, int month, int year, String phoneNumber) {
         JobInfo jobInfo = jobInfoService.getJobById(jobId);
         List<WorkDay> workDays = workDayService.myWorkDays(jobId, month, year, phoneNumber);
+        updateToLocalTime(workDays);
         Salary salary = new Salary();
         salary.salary = calcTravels(jobInfo, workDays, salary);
         salary.salary += calcFood(jobInfo, workDays);

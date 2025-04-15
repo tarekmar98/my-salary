@@ -15,11 +15,12 @@ public class WorkDayController {
     @Autowired
     WorkDayService workDayService;
 
-    @PutMapping("/startWorkDay/{jobId}/{workType}")
+    @PutMapping("/startWorkDay/{jobId}/{workType}/{timeDiffUtc}")
     public ResponseEntity<?> startWorkDay(@PathVariable("jobId") Long jobId,
                                           @PathVariable("workType") String workType,
+                                          @PathVariable("timeDiffUtc") Float timeDiffUtc,
                                           @RequestHeader("phoneNumber") String phoneNumber) {
-        return ResponseEntity.ok().body(workDayService.startWorkDay(jobId, workType, phoneNumber));
+        return ResponseEntity.ok().body(workDayService.startWorkDay(jobId, workType, phoneNumber, timeDiffUtc));
     }
 
     @GetMapping("/myWorkDays/{jobId}/{salaryMonth}/{salaryYear}")

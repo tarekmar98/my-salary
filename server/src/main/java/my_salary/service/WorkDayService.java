@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
+import java.time.ZoneOffset;
 import java.util.List;
 
 
@@ -22,11 +23,11 @@ public class WorkDayService {
     @Autowired
     private ResourcesService resourcesService;
 
-    public WorkDay startWorkDay(Long jobId, String workType, String phoneNumber) {
+    public WorkDay startWorkDay(Long jobId, String workType, String phoneNumber, Float timeDiffUtc) {
         JobInfo jobInfo = jobInfoService.getJobById(jobId);
         jobInfoService.validate(jobInfo, phoneNumber);
         if (jobInfo.getCurrStart() == null) {
-            jobInfo.setCurrStart(OffsetDateTime.now());
+            jobInfo.setCurrStart(OffsetDateTime.now(ZoneOffset.UTC));
             jobInfo.setCurrWorkType(workType);
             jobInfoService.validate(jobInfo, phoneNumber);
             jobInfoService.updateJob(jobInfo, phoneNumber);
@@ -37,8 +38,8 @@ public class WorkDayService {
             }
 
             YearMonth salaryMonth = YearMonth.from(jobInfo.getCurrStart());
-            WorkDay workDay = new WorkDay(jobId, salaryMonth.getYear(), salaryMonth.getMonth().getValue(), jobInfo.getCurrStart().toLocalDate(),
-                                            workType, jobInfo.getCurrStart(), OffsetDateTime.now());
+            WorkDay workDay = new WorkDay(jobId, salaryMonth.getYear(), salaryMonth.getMonth().getValue(), workType,
+                    jobInfo.getCurrStart(), OffsetDateTime.now(ZoneOffset.UTC), timeDiffUtc);
             validate(workDay, phoneNumber);
             jobInfo.setCurrStart(null);
             jobInfo.setCurrWorkType(null);
@@ -75,10 +76,6 @@ public class WorkDayService {
         if (workDay.getStartTime() == null || workDay.getEndTime() == null
                 || workDay.getStartTime().isAfter(workDay.getEndTime())) {
             throw new IllegalArgumentException("Invalid start and end time!");
-        }
-
-        if (!workDay.getSalaryMonth().equals(YearMonth.from(workDay.getWorkDate()))) {
-            throw new IllegalArgumentException("Invalid salary month!");
         }
 
         if (!resourcesService.isValidWorkType(workDay.getWorkType())) {
