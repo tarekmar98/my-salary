@@ -4,6 +4,7 @@ import 'package:client/Service/StorageService.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/JobInfo.dart';
+import '../Model/User.dart';
 import '../Service/HttpService.dart';
 import '../Service/ServiceLocator.dart';
 
