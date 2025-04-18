@@ -18,8 +18,8 @@ public class SmsSenderService {
 
     public SmsSenderService() {
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
-                "AKIAQUBYQ7OYYLCFSQW4",
-                "3lOhdagkQ3zPEOF3u7hzloA9NvmpUKfDji5Hvi0t"
+                "access key id",
+                "secret access key"
         );
 
         this.snsClient = SnsClient.builder()
